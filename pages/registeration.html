@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>ExTinguisher - Login</title>
+    <title>ExTinguisher - Register</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -39,26 +39,27 @@
             <div class="col-md-4 col-md-offset-4">
                 <div class="login-panel panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">Please Sign In</h3>
+                        <h3 class="panel-title">CourseBoard Registration Form</h3>
                     </div>
                     <div class="panel-body">
-                        <form action="login.html" method="GET">
+                        <form role="form" method="post" action="register.html">
                             <fieldset>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="E-mail" name="email" type="email" autofocus>
+                                    <input class="form-control" placeholder="First Name" name="firstname" type="text" autofocus>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="Last Name" name="lastname" type="text">
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="E-mail" name="email" type="email">
                                 </div>
                                 <div class="form-group">
                                     <input class="form-control" placeholder="Password" name="password" type="password" value="">
+								</div>
+								<div class="form-group">
+                                    <input class="form-control" placeholder="Confirm Password" name="confirmpassword" type="password" value="">
                                 </div>
-                                <div class="checkbox">
-                                    <label>
-                                        <input name="remember" type="checkbox" value="Remember Me">Remember Me
-                                    </label>
-                                </div>
-                                <!--<a href="index.html" class="btn btn-lg btn-success btn-block">Login</a>-->
-                                <button type="submit" class="btn btn-lg btn-success btn-block">Login</button>
-                                <br />
-                                <div>Don't have an account? <a href="register.html">Register here</a>.</div>
+                                <button type="submit" class="btn btn-lg btn-success btn-block">Register</button>
                             </fieldset>
                         </form>
                     </div>
@@ -77,7 +78,7 @@
     <script src="../vendor/metisMenu/metisMenu.min.js"></script>
 
     <!-- Custom Theme JavaScript -->
-    <script src="../dist/js/sb-admin-2.js"></script>
+	<script src="../dist/js/sb-admin-2.js"></script>
 
     <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
     <script>
@@ -93,14 +94,47 @@
       firebase.initializeApp(config);
     </script>
     <script src="../js/functions.js"></script>
-    <script>
-        $('form').submit(function(e) {
-            e.preventDefault();
-            $form = $(this);
-            console.log($form.find('input[name="email"]').val());
-            signInExistingUser($form.find('input[name="email"]').val(), $form.find('input[name="password"]').val());
-        });
-    </script>
+	<script>
+		var minPassword = 8;
+		if (window.location.href.indexOf('?retry=') !== -1) {
+			var retryReason = window.location.href.split('?retry=')[1];
+			switch(retryReason) {
+				case "shortpw":
+					errorMsg('Your password needs a minimum of ' + minPassword + ' characters.')
+					break;
+				case "nomatch":
+					errorMsg('Your password did not match.')
+					break;
+				default:
+					errorMsg('Something went wrong. Please try again.');
+			}
+		}
+
+		$('form').submit(function(e) {
+			e.preventDefault();
+			var $form = $(this);
+			if ($form.find('input[name="password"]').val() === $form.find('input[name="confirmpassword"]').val() && $.trim($form.find('input[name="password"]').val()) !== '') {
+				if ($form.find('input[name="password"]').val().length >= minPassword) {
+                    createNewStudent($form.find('input[name="email"]').val(), $form.find('input[name="password"]').val(), $form.find('input[name="firstname"]').val() + ' ' + $form.find('input[name="lastname"]').val(), function() {
+                        $form.attr('action', 'register.html?registered');
+					    $form.submit();
+                    })
+				} else {
+					retry('shortpw');
+				}
+			} else {
+				retry('nomatch');
+			}
+		});
+
+		function errorMsg(txt) {
+			$('form').before('<div style="color:red; font-weight:bold;">' + txt + '</div>');
+		}
+
+		function retry(reason) {
+			window.location = window.location.href.split('?')[0] + '?retry=' + reason
+		}
+	</script>
 
 </body>
 
