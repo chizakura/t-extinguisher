@@ -90,7 +90,7 @@
         authDomain: "t-extinguisher.firebaseapp.com",
         databaseURL: "https://t-extinguisher.firebaseio.com",
         projectId: "t-extinguisher",
-        storageBucket: "",
+        storageBucket: "t-extinguisher.appspot.com",
         messagingSenderId: "845124871742"
     };
     firebase.initializeApp(config);
@@ -118,8 +118,8 @@
 			var $form = $(this);
 			if ($form.find('input[name="password"]').val() === $form.find('input[name="confirmpassword"]').val() && $.trim($form.find('input[name="password"]').val()) !== '') {
 				if ($form.find('input[name="password"]').val().length >= minPassword) {
-                    createNewStudent($form.find('input[name="email"]').val(), $form.find('input[name="password"]').val(), $form.find('input[name="firstname"]').val() + ' ' + $form.find('input[name="lastname"]').val(), function() {
-                        $form.attr('action', 'register.html?registered');
+                    createNewUser($form.find('input[name="email"]').val(), $form.find('input[name="password"]').val(), $form.find('input[name="firstname"]').val() + ' ' + $form.find('input[name="lastname"]').val(), function() {
+                        $form.attr('action', 'registration.html?registered');
 					    $form.submit();
                     })
 				} else {
