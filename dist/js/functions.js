@@ -31,7 +31,7 @@ function initialCheck() {
 			// User is signed in and currentUser will no longer return null.
 			if (location.href.indexOf('login.html') !== -1 || location.href.indexOf('registration.html') !== -1) {
 				window.location.href = 'index.html?logged_in';
-			} else if (location.href.indexOf('index.html') !== -1) {
+			} else if (location.href.indexOf('profile.html') !== -1) {
 				$('h1.page-header').append(' ' + getName() + '!');
 			}
 
@@ -70,29 +70,29 @@ function dbResult(path, result, after) {
 		after();
 	});
 }
-function createComment(cid, aid) {
-	var updates = {};
-	updates['courses/' + cid + '/assignments/' + aid] = true;
-	updates['assignments/' + aid + '/courses/' + cid] = true;
-	firebase.database().ref().update(updates);
-}
-
-function getUserInfo() {
+/*
+** Function purpose: Display list of all users
+** members.html
+*/
+function getAllUsers() {
 	dbResult('/users/', function(key, value) {
-		var today = new Date();
-		var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-		var dayName = days[today.getDay()];
-		if(value['students'] !== undefined && value['days'] !== undefined) {
-			if (value['days'][dayName.toLowerCase()] && value['students'][$uid]) {
-				startTime = convertHours(value['startTime']);
-				endTime = convertHours(value['endTime']);
-				$('#todaySchedule > div.panel-body').append('<div class="panel-group course"><div class="panel panel-default"><div class="panel-heading"><strong><a href="courses.html?cid=' + key + '">' + value['title'] + '</a></strong></div><div class="panel-body">' + value['description'] + '</div><div class="panel-footer"><span style="font-size:smaller;">From ' + startTime + ' to ' + endTime + '</span></div></div>');
+		var uid = key;
+		if ($('#allmembers-table tbody tr.' + uid).length === 0) {
+			$('#allmembers-table tbody').append('<tr class="' + uid + '"><td class="userName"></td><td class="userEmail"></td><td class="userGender"></td></tr>');
+		}
+
+		$.each(value, function(userAttr, val) {
+			if (userAttr === 'name') {
+				$('#allcourses-table tbody tr.' + uid + ' td.userName').html('<a href="members.html?uid=' + uid + '">' + val + '</a>');
+				$('h1.page-header').text('All Members');
+			} else if (userAttr === 'email') {
+				$('#allcourses-table tbody tr.' + uid + ' td.userEmail').text(val);
+			} else if (userAttr === 'gender') {
+				$('#allcourses-table tbody tr.' + uid + ' td.userGender').text(val);
 			}
-		}
+		});
 	}, function() {
-		if ($('#todaySchedule > div.panel-body').is(':empty')) {
-			$('#todaySchedule > div.panel-body').text('You have no classes scheduled for today. Enjoy your day!');
-		}
+		// Callback to retrieving DB data
 	});
 }
 /*

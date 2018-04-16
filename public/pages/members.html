@@ -108,12 +108,12 @@
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
-                            <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+                            <table width="100%" class="table table-striped table-bordered table-hover" id="allmembers-table">
                                 <thead>
                                     <tr>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Average Rating</th>
+                                        <th class="userName">Name</th>
+                                        <th class="userEmail">Email</th>
+                                        <th class="userGender">Gender</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -225,6 +225,29 @@
     });
     </script>
 
+    <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+    <script>
+    // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyCNFAHuMHOccxwnocA-DYRhoXVLw2i7OPk",
+        authDomain: "t-extinguisher.firebaseapp.com",
+        databaseURL: "https://t-extinguisher.firebaseio.com",
+        projectId: "t-extinguisher",
+        storageBucket: "t-extinguisher.appspot.com",
+        messagingSenderId: "845124871742"
+    };
+    firebase.initializeApp(config);
+    </script>
+    
+    <script src="../dist/js/functions.js"></script>
+
+    <script>
+    if (location.href.indexOf('uid=') !== -1) {
+        var uid = parseInt(location.href.split('uid=')[1].split('&')[0], 10);
+    } else {
+        getAllUsers();
+    }
+    </script>
 </body>
 
 </html>

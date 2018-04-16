@@ -1,3 +1,6 @@
+var $uid = '';
+initialCheck();
+
 $('#forgotpw').click(function(e) {
 	e.preventDefault();
 	sendPasswordReset(firebase.auth().currentUser.email);
@@ -7,6 +10,46 @@ $('#signout').click(function(e) {
 	e.preventDefault();
 	signOutUser();
 });
+
+function initialCheck() {
+	firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION).then(function() {
+	  // Existing and future Auth states are now persisted in the current
+	  // session only. Closing the window would clear any existing state even
+	  // if a user forgets to sign out.
+	  // ...
+	  // New sign-in will be persisted with session persistence.
+	  return firebase.auth().signInWithEmailAndPassword(email, password);
+	}).catch(function(error) {
+	  // Handle Errors here.
+	  var errorCode = error.code;
+	  var errorMessage = error.message;
+	});
+
+	firebase.auth().onAuthStateChanged(function(user) {
+		if (user) {
+			$uid = getUID();
+			// User is signed in and currentUser will no longer return null.
+			if (location.href.indexOf('login.html') !== -1 || location.href.indexOf('registration.html') !== -1) {
+				window.location.href = 'index.html?logged_in';
+			} else if (location.href.indexOf('profile.html') !== -1) {
+				$('h1.page-header').append(' ' + getName() + '!');
+			}
+
+			if (!user.emailVerified) {
+				sendEmailVerification();
+			}
+
+			if (user.displayName === null) {
+				updateName(prompt('What is your name?'));
+			}
+		} else {
+			// No user is signed in.
+			if(location.href.indexOf('login.html') === -1 && location.href.indexOf('registration.html') === -1) {
+				window.location.href = 'login.html?not_logged_in';
+			}
+		}
+	});
+}
 /*
  ** Helper function to: dbResult
  */
@@ -25,6 +68,31 @@ function dbResult(path, result, after) {
 		});
 	}, function() {
 		after();
+	});
+}
+/*
+** Function purpose: Display list of all users
+** members.html
+*/
+function getAllUsers() {
+	dbResult('/users/', function(key, value) {
+		var uid = key;
+		if ($('#allmembers-table tbody tr.' + uid).length === 0) {
+			$('#allmembers-table tbody').append('<tr class="' + uid + '"><td class="userName"></td><td class="userEmail"></td><td class="userGender"></td></tr>');
+		}
+
+		$.each(value, function(userAttr, val) {
+			if (userAttr === 'name') {
+				$('#allcourses-table tbody tr.' + uid + ' td.userName').html('<a href="members.html?uid=' + uid + '">' + val + '</a>');
+				$('h1.page-header').text('All Members');
+			} else if (userAttr === 'email') {
+				$('#allcourses-table tbody tr.' + uid + ' td.userEmail').text(val);
+			} else if (userAttr === 'gender') {
+				$('#allcourses-table tbody tr.' + uid + ' td.userGender').text(val);
+			}
+		});
+	}, function() {
+		// Callback to retrieving DB data
 	});
 }
 /*
@@ -119,4 +187,17 @@ function getName() {
 
 function getUID() {
 	return firebase.auth().currentUser.uid;
+}
+
+function updateName(newName) {
+	var user = firebase.auth().currentUser;
+
+	user.updateProfile({
+		displayName: newName
+	}).then(function() {
+		// Update successful
+		window.location.reload();
+	}).catch(function() {
+		// An error happened.
+	});
 }
