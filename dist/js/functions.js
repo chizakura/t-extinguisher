@@ -31,7 +31,7 @@ function initialCheck() {
 			// User is signed in and currentUser will no longer return null.
 			if (location.href.indexOf('login.html') !== -1 || location.href.indexOf('registration.html') !== -1) {
 				window.location.href = 'index.html?logged_in';
-			} else if (location.href.indexOf('profile.html') !== -1) {
+			} else if (location.href.indexOf('index.html') !== -1) {
 				$('h1.page-header').append(' ' + getName() + '!');
 			}
 
@@ -75,6 +75,25 @@ function createComment(cid, aid) {
 	updates['courses/' + cid + '/assignments/' + aid] = true;
 	updates['assignments/' + aid + '/courses/' + cid] = true;
 	firebase.database().ref().update(updates);
+}
+
+function getUserInfo() {
+	dbResult('/users/', function(key, value) {
+		var today = new Date();
+		var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+		var dayName = days[today.getDay()];
+		if(value['students'] !== undefined && value['days'] !== undefined) {
+			if (value['days'][dayName.toLowerCase()] && value['students'][$uid]) {
+				startTime = convertHours(value['startTime']);
+				endTime = convertHours(value['endTime']);
+				$('#todaySchedule > div.panel-body').append('<div class="panel-group course"><div class="panel panel-default"><div class="panel-heading"><strong><a href="courses.html?cid=' + key + '">' + value['title'] + '</a></strong></div><div class="panel-body">' + value['description'] + '</div><div class="panel-footer"><span style="font-size:smaller;">From ' + startTime + ' to ' + endTime + '</span></div></div>');
+			}
+		}
+	}, function() {
+		if ($('#todaySchedule > div.panel-body').is(':empty')) {
+			$('#todaySchedule > div.panel-body').text('You have no classes scheduled for today. Enjoy your day!');
+		}
+	});
 }
 /*
  ** Function purpose: Registration - register new user
@@ -168,4 +187,17 @@ function getName() {
 
 function getUID() {
 	return firebase.auth().currentUser.uid;
+}
+
+function updateName(newName) {
+	var user = firebase.auth().currentUser;
+
+	user.updateProfile({
+		displayName: newName
+	}).then(function() {
+		// Update successful
+		window.location.reload();
+	}).catch(function() {
+		// An error happened.
+	});
 }
