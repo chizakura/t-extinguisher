@@ -1,6 +1,3 @@
-var $uid = '';
-initialCheck();
-
 $('#forgotpw').click(function(e) {
 	e.preventDefault();
 	sendPasswordReset(firebase.auth().currentUser.email);
@@ -29,12 +26,6 @@ function dbResult(path, result, after) {
 	}, function() {
 		after();
 	});
-}
-function createComment(cid, aid) {
-	var updates = {};
-	updates['courses/' + cid + '/assignments/' + aid] = true;
-	updates['assignments/' + aid + '/courses/' + cid] = true;
-	firebase.database().ref().update(updates);
 }
 /*
  ** Function purpose: Registration - register new user
