@@ -1,3 +1,5 @@
+$('h1.page-header').append(' ' + getName() + '!');
+
 var $uid = '';
 initialCheck();
 
@@ -10,6 +12,46 @@ $('#signout').click(function(e) {
 	e.preventDefault();
 	signOutUser();
 });
+
+function initialCheck() {
+	firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION).then(function() {
+	  // Existing and future Auth states are now persisted in the current
+	  // session only. Closing the window would clear any existing state even
+	  // if a user forgets to sign out.
+	  // ...
+	  // New sign-in will be persisted with session persistence.
+	  return firebase.auth().signInWithEmailAndPassword(email, password);
+	}).catch(function(error) {
+	  // Handle Errors here.
+	  var errorCode = error.code;
+	  var errorMessage = error.message;
+	});
+
+	firebase.auth().onAuthStateChanged(function(user) {
+		if (user) {
+			$uid = getUID();
+			// User is signed in and currentUser will no longer return null.
+			if (location.href.indexOf('login.html') !== -1 || location.href.indexOf('registration.html') !== -1) {
+				window.location.href = 'index.html?logged_in';
+			} else if (location.href.indexOf('profile.html') !== -1) {
+				$('h1.page-header').append(' ' + getName() + '!');
+			}
+
+			if (!user.emailVerified) {
+				sendEmailVerification();
+			}
+
+			if (user.displayName === null) {
+				updateName(prompt('What is your name?'));
+			}
+		} else {
+			// No user is signed in.
+			if(location.href.indexOf('login.html') === -1 && location.href.indexOf('registration.html') === -1) {
+				window.location.href = 'login.html?not_logged_in';
+			}
+		}
+	});
+}
 /*
  ** Helper function to: dbResult
  */
