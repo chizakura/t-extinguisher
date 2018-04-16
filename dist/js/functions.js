@@ -1,5 +1,3 @@
-$('h1.page-header').append(' ' + getName() + '!');
-
 var $uid = '';
 initialCheck();
 
