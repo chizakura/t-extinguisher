@@ -2,6 +2,31 @@ $('#forgotpw').click(function(e) {
 	e.preventDefault();
 	sendPasswordReset(firebase.auth().currentUser.email);
 });
+
+$('#signout').click(function(e) {
+	e.preventDefault();
+	signOutUser();
+});
+/*
+ ** Helper function to: dbResult
+ */
+function retrieveFrom(path, callback, after) {
+	firebase.database().ref(path).once('value', function(snap) {
+		callback(snap.val());
+	}).then(function() {
+		after();
+	});
+}
+
+function dbResult(path, result, after) {
+	retrieveFrom(path, function(data) {
+		$.each(data, function (index, item) {
+			result(index, item);
+		});
+	}, function() {
+		after();
+	});
+}
 /*
  ** Function purpose: Registration - register new user
  ** registration.html
@@ -79,4 +104,19 @@ function sendPasswordReset(emailAddress) {
 	}).catch(function(error) {
 		// An error happened.
 	});
+}
+/*
+ ** Function purpose: User data - access information about the existing user
+ ** i.e. email, name, uid (user ID)
+ */
+function getEmail() {
+	return firebase.auth().currentUser.email;
+}
+
+function getName() {
+	return firebase.auth().currentUser.displayName;
+}
+
+function getUID() {
+	return firebase.auth().currentUser.uid;
 }
