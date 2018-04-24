@@ -34,6 +34,7 @@ function initialCheck() {
 			} else if (location.href.indexOf('profile.html') !== -1) {
 				$('h1.page-header').append(' ' + getName() + '!');
 			}
+			getAllUsers();
 
 			if (!user.emailVerified) {
 				sendEmailVerification();
