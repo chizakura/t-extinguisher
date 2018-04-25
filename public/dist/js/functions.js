@@ -32,7 +32,10 @@ function initialCheck() {
 			if (location.href.indexOf('login.html') !== -1 || location.href.indexOf('registration.html') !== -1) {
 				window.location.href = 'index.html?logged_in';
 			} else if (location.href.indexOf('profile.html') !== -1) {
-				$('h1.page-header').append(' ' + getName() + '!');
+				//$('h1.page-header').append(' ' + getName() + '!');
+				$('p.p-name').append(' ' + getName());
+				$('p.p-email').append(' ' + getEmail());
+				$('p.p-profileid').append(' ' + getProfileID());
 			}
 
 			if (!user.emailVerified) {
@@ -75,19 +78,18 @@ function dbResult(path, result, after) {
 ** members.html
 */
 function getAllUsers() {
-	dbResult('/users/', function(key, value) {
+	dbResult('/Users/', function(key, value) {
 		var uid = key;
 		if ($('#allmembers-table tbody tr.' + uid).length === 0) {
 			$('#allmembers-table tbody').append('<tr class="' + uid + '"><td class="userName"></td><td class="userEmail"></td><td class="userGender"></td></tr>');
 		}
 
 		$.each(value, function(userAttr, val) {
-			if (userAttr === 'name') {
+			if (userAttr === 'Name') {
 				$('#allcourses-table tbody tr.' + uid + ' td.userName').html('<a href="members.html?uid=' + uid + '">' + val + '</a>');
-				$('h1.page-header').text('All Members');
-			} else if (userAttr === 'email') {
+			} else if (userAttr === 'Email') {
 				$('#allcourses-table tbody tr.' + uid + ' td.userEmail').text(val);
-			} else if (userAttr === 'gender') {
+			} else if (userAttr === 'Gender') {
 				$('#allcourses-table tbody tr.' + uid + ' td.userGender').text(val);
 			}
 		});
@@ -185,8 +187,8 @@ function getName() {
 	return firebase.auth().currentUser.displayName;
 }
 
-function getUID() {
-	return firebase.auth().currentUser.uid;
+function getProfileID() {
+	return firebase.auth().currentUser.uid.ProfileID;
 }
 
 function updateName(newName) {
