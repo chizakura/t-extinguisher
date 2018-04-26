@@ -91,11 +91,14 @@ function getAllUsers() {
 
 		$.each(value, function(userAttr, val) {
 			if (userAttr === 'Name') {
-				$('#allcourses-table tbody tr.' + uid + ' td.userName').html('<a href="members.html?uid=' + uid + '">' + val + '</a>');
+				$('#allcourses-table tbody tr.' + uid + ' th.userName').html('<a href="members.html?uid=' + uid + '">' + val + '</a>');
 			} else if (userAttr === 'Email') {
-				$('#allcourses-table tbody tr.' + uid + ' td.userEmail').text(val);
+				//$('#allcourses-table tbody tr.' + uid + ' th.userEmail').text(val);
+				getName().then(function(val){
+					$('#allcourses-table tbody tr.' + uid + ' th.userEmail').append(' ' + val);
+				});
 			} else if (userAttr === 'Gender') {
-				$('#allcourses-table tbody tr.' + uid + ' td.userGender').text(val);
+				$('#allcourses-table tbody tr.' + uid + ' th.userGender').text(val);
 			}
 		});
 	}, function() {
