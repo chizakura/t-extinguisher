@@ -33,9 +33,13 @@ function initialCheck() {
 				window.location.href = 'index.html?logged_in';
 			} else if (location.href.indexOf('profile.html') !== -1) {
 				//$('h1.page-header').append(' ' + getName() + '!');
-				$('p.p-name').append(' ' + getName());
+				getName().then(function(value){
+					$('p.p-name').append(' ' + value);
+				});
 				$('p.p-email').append(' ' + getEmail());
-				$('p.p-profileid').append(' ' + getProfileID());
+				getProfileID().then(function(value){
+					$('p.p-profileid').append(' ' + value);
+				});
 				$('p.p-uid').append(' ' + getUID());
 			}
 
@@ -189,10 +193,16 @@ function getName() {
 	var uid = getUID();
 	var ref = firebase.database().ref('Users/' + uid);
 	//return firebase.auth().currentUser.displayName; //currently returns null, but changes when line 45 works
-	var result = ref.once("value").then(function(snapshot) {
-		return snapshot.child("Name").val();
-	});
-	return result;
+	//var result = ref.once("value").then(function(snapshot) {
+	//	return snapshot.child("Name").val();
+	//});
+	//var name = "Anonymous";
+	var name = ref.once("value")
+		.then(function(snapshot) {
+			var name = snapshot.child("Name").val();
+			return name;
+		});
+	return name;
 }
 
 function getUID() {
@@ -204,12 +214,31 @@ function getProfileID() {
 	return firebase.database().ref('/Users/' + userID + '/ProfileID').once('value').then(function(snapshot) {
 		snapshot.val().ProfileID;
 	});*/
+	
 	var uid = getUID();
 	var ref = firebase.database().ref('Users/' + uid);
 	var result = ref.once("value").then(function(snapshot) {
 		return snapshot.child("ProfileID").val();
   	});
   	return result;
+  	/*
+  	var uid = getUID();
+  	var ref = firebase.database().ref('Users/' + uid);
+  	let myPromise = new Promise((resolve,reject) => {
+  		setTimeout(function(){
+  			resolve("Success!");
+  		}, 250);
+  	});
+  	ref.once("value").myPromise.then(function(snapshot) => {
+  		return new Promise((resolve, reject) => {
+  			if(snapshot) {
+  				snapshot.child("ProfileID").val();
+  				resolve(snapshot);
+  			} else {
+  				reject(error);
+  			}
+  		});
+  	});*/
 }
 
 function updateName(newName) {
