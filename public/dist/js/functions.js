@@ -42,9 +42,9 @@ function initialCheck() {
 				sendEmailVerification();
 			}
 
-			if (user.displayName === null) {
+			/*if (user.displayName === null) {
 				updateName(prompt('What is your name?'));
-			}
+			}*/
 		} else {
 			// No user is signed in.
 			if(location.href.indexOf('login.html') === -1 && location.href.indexOf('registration.html') === -1) {
@@ -114,7 +114,8 @@ function createNewUser(email, password, name) {
 }
 // Helper function to: createNewUser
 function writeUserData() {
-  firebase.auth().ref('users/' + getUID()).set({
+	var userID = getUID();
+  firebase.auth().ref('Users/' + userID).set({
     name: firebase.auth().currentUser.displayName,
     email: firebase.auth().currentUser.email
   });
@@ -187,8 +188,15 @@ function getName() {
 	return firebase.auth().currentUser.displayName;
 }
 
+function getUID() {
+	return firebase.auth().currentUser.uid;
+}
+
 function getProfileID() {
-	return firebase.auth().currentUser.uid.ProfileID;
+	var userID = firebase.auth().currentUser.uid;
+	return firebase.database().ref('/Users/' + userID + '/ProfileID').once('value').then(function(snapshot) {
+		snapshot.val().ProfileID;
+	});
 }
 
 function updateName(newName) {

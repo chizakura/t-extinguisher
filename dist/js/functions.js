@@ -36,15 +36,16 @@ function initialCheck() {
 				$('p.p-name').append(' ' + getName());
 				$('p.p-email').append(' ' + getEmail());
 				$('p.p-profileid').append(' ' + getProfileID());
+				$('p.p-uid').append(' ' + getUID());
 			}
 
 			if (!user.emailVerified) {
 				sendEmailVerification();
 			}
 
-			if (user.displayName === null) {
+			/*if (user.displayName === null) {
 				updateName(prompt('What is your name?'));
-			}
+			}*/
 		} else {
 			// No user is signed in.
 			if(location.href.indexOf('login.html') === -1 && location.href.indexOf('registration.html') === -1) {
@@ -114,9 +115,10 @@ function createNewUser(email, password, name) {
 }
 // Helper function to: createNewUser
 function writeUserData() {
-  firebase.auth().ref('users/' + getUID()).set({
-    name: firebase.auth().currentUser.displayName,
-    email: firebase.auth().currentUser.email
+	var userID = getUID();
+  	firebase.auth().ref('Users/' + userID).set({
+    	name: firebase.auth().currentUser.displayName,
+    	email: firebase.auth().currentUser.email
   });
 }
 /*
@@ -180,15 +182,34 @@ function sendPasswordReset(emailAddress) {
  ** i.e. email, name, uid (user ID)
  */
 function getEmail() {
-	return firebase.auth().currentUser.email;
+	return firebase.auth().currentUser.email; //working
 }
 
 function getName() {
-	return firebase.auth().currentUser.displayName;
+	var uid = getUID();
+	var ref = firebase.database().ref('Users/' + uid);
+	//return firebase.auth().currentUser.displayName; //currently returns null, but changes when line 45 works
+	var result = ref.once("value").then(function(snapshot) {
+		return snapshot.child("Name").val();
+	});
+	return result;
+}
+
+function getUID() {
+	return firebase.auth().currentUser.uid; //.getToken() shows blank
 }
 
 function getProfileID() {
-	return firebase.auth().currentUser.uid.ProfileID;
+	/*var userID = firebase.auth().currentUser.uid;
+	return firebase.database().ref('/Users/' + userID + '/ProfileID').once('value').then(function(snapshot) {
+		snapshot.val().ProfileID;
+	});*/
+	var uid = getUID();
+	var ref = firebase.database().ref('Users/' + uid);
+	var result = ref.once("value").then(function(snapshot) {
+		return snapshot.child("ProfileID").val();
+  	});
+  	return result;
 }
 
 function updateName(newName) {
