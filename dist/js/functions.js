@@ -134,16 +134,6 @@ function getUserRatings() {
 	});
 }
 
-
-	function rScore(){
-	var A = 0.5;
-	var p = 6.2;
-	var z = 1 - Math.pow(Math.E,-1);
-	return ("rating = ", ((0.5) * p + 10 * (0.5) * (z)).toFixed(2));
-}
-var p = 6.2;
-document.write("Rating is ", rScore(p));
-
 /*
  ** Function purpose: Registration - register new user
  ** registration.html
