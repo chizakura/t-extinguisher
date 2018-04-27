@@ -134,18 +134,13 @@ function getUserRatings() {
 	});
 }
 
-// Set the configuration for your app
-  // TODO: Replace with your project's config object
-  var config = {
-    apiKey: "AIzaSyCNFAHuMHOccxwnocA-DYRhoXVLw2i7OPk",
-    authDomain: "t-extinguisher.firebaseapp.com",
-    databaseURL: "https://t-extinguisher.firebaseio.com",
-    storageBucket: "t-extinguisher.appspot.com"
-  };
-  firebase.initializeApp(config);
+var ref = firebase.database().ref();
 
-  // Get a reference to the database service
-  var database = firebase.database();
+ref.on("value", function(snapshot) {
+   console.log(snapshot.val());
+}, function (error) {
+   console.log("Error: " + error.code);
+});
 
 /*
  ** Function purpose: Registration - register new user
