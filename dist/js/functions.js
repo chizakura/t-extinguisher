@@ -98,7 +98,7 @@ function getAllUsers() {
 
 		$.each(value, function(userAttr, val) {
 			if (userAttr === 'Name') {
-				$('#userName' + uid).text(val);//html('<a href="profile.html?uid=' + uid + '">' + val + '</a>');
+				$('#userName' + uid).html('<a href="members_profile.html?uid=">' + val + '</a>');
 			} else if (userAttr === 'Email') {
 				$('#userEmail' + uid).text(val);
 			} else if (userAttr === 'Gender') {
@@ -111,18 +111,24 @@ function getAllUsers() {
 }
 
 function getUserRatings() {
-	dbResult('/Users/Ratings', function(key, value) {
-		var uid = key;
-		if ($('#userRatings-table tbody tr.' + uid).length === 0) {
+	var n = 
+	dbResult('/Ratings/', function(key, value) {
+		var pid = key;
+		if ($('#userRatings-table tbody tr.' + pid).length === 0) {
 			$('#userRatings-table tbody').append(
-				'<tr class="' + uid + '"><td class="userProfileID" id="userProfileID' + uid + '"></td>'
-			   +'<td class="userRating" id="userRating' + uid + '""></td></tr>');
+				'<tr class="' + pid + '"><td class="userProfileID" id="userProfileID' + pid + '"></td>'
+			   +'<td class="userRating" id="userRating' + pid + '""></td></tr>');
 		}
 		$.each(value, function(userAttr, val) {
+			$('#userProfileID' + pid).text(userAttr);
+			$('#userRating' + pid).text(val);
+			}
+			/*
+			$.each(value, function(userAttr, val) {
 			$('#userProfileID' + uid).text(userAttr);
 			console.log(userAttr);
-			$('#userRating' + uid).text(val);
-		});
+			$('#userRating' + uid).text(val);*/
+		);
 	}, function() {
 		// Callback to retrieving DB data
 	});
@@ -264,6 +270,28 @@ function getProfileID() {
   			}
   		});
   	});*/
+}
+
+function getPhotoUrl() {
+	return firebase.auth().currentUser.photoURL;
+}
+
+function updatePhoto() {
+	// Get current user
+	var user = firebase.auth().currentUser;
+	// Create a storage ref w/ user
+	var storageRef = firebase.storage().ref(user + '/profilePicture/' + file.name);
+	// Upload file
+	var task = storageRef.put(file);
+	/*// The Firebase Way
+	user.updateProfile({
+		displayName: "",
+		photoURL: ""
+	}).then(function() {
+		// Update successful
+	}).catch(function(error) {
+		// An error happened
+	})*/
 }
 
 function updateName(newName) {

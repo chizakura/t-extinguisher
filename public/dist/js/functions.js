@@ -98,7 +98,7 @@ function getAllUsers() {
 
 		$.each(value, function(userAttr, val) {
 			if (userAttr === 'Name') {
-				$('#userName' + uid).html('<a href="members_profile.html">' + val + '</a>');
+				$('#userName' + uid).html('<a href="members_profile.html?uid=' + uid + '">' + val + '</a>');
 			} else if (userAttr === 'Email') {
 				$('#userEmail' + uid).text(val);
 			} else if (userAttr === 'Gender') {
@@ -270,6 +270,28 @@ function getProfileID() {
   			}
   		});
   	});*/
+}
+
+function getPhotoUrl() {
+	return firebase.auth().currentUser.photoURL;
+}
+
+function updatePhoto() {
+	// Get current user
+	var user = firebase.auth().currentUser;
+	// Create a storage ref w/ user
+	var storageRef = firebase.storage().ref(user + '/profilePicture/' + file.name);
+	// Upload file
+	var task = storageRef.put(file);
+	/*// The Firebase Way
+	user.updateProfile({
+		displayName: "",
+		photoURL: ""
+	}).then(function() {
+		// Update successful
+	}).catch(function(error) {
+		// An error happened
+	})*/
 }
 
 function updateName(newName) {
