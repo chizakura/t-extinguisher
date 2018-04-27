@@ -110,12 +110,14 @@
                 <div class="col-lg-4">
                     <div class="panel panel-info">
                         <div class="panel-heading">
-                            Account Info
+                            Profile Info
                         </div>
                         <div class="panel-body">
                             <img class="m-picture" src="https://firebasestorage.googleapis.com/v0/b/t-extinguisher.appspot.com/o/no-avatar.png?alt=media&token=1e9ace7d-91cf-405f-9c1a-0ca5134939f9" alt=""/>
                             <p class="m-name">Name:</p>
                             <p class="m-email">Email:</p>
+                            <p class="m-profileid">Profile ID:</p>
+                            <p class="m-overallScore">Overall Score: </p>
                         </div>
                         <div class="panel-footer">
                             
@@ -126,11 +128,10 @@
                 <div class="col-lg-4">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            Your Ratings
+                            Rate
                         </div>
                         <div class="panel-body">
-                            <p>Your ProfileID:</p> 
-                            <p>Score by >>insert name here<<</p>
+                            
                         </div>
                         <div class="panel-footer">
                             
@@ -138,6 +139,7 @@
                     </div>
                 </div>
                 <!-- /.col-lg-4 -->
+                <!--
                 <div class="col-lg-4">
                     <div class="panel panel-primary">
                         <div class="panel-heading">
@@ -150,10 +152,10 @@
                             
                         </div>
                     </div>
-                </div>
-                <!-- /.row -->
+                </div>-->
                 <!-- /.col-lg-4 -->
             </div>
+            <!-- /.row -->
             </div>
             <!-- /.container-fluid -->
         </div>
@@ -191,11 +193,49 @@
     <script src="../dist/js/functions.js"></script>
 
     <script>
-        if (location.href.indexOf('uid=') !== -1) {
-            var uid = parseInt(location.href.split('uid=')[1].split('&')[0], 10);
-    } else {
-        $('h1.page-header').append(getName() + ' Profile');
-    }
+        // Get member's name
+        function getMemberName() {
+            var uid = location.href.match(/uid=(.+)/)[1];
+            var ref = firebase.database().ref('Users/' + uid);
+            var name = ref.once("value").then(function(snapshot) {
+                var name = snapshot.child("Name").val();
+                    return name;
+        });
+            return name;
+        }
+        // Append to member's profile
+        getMemberName().then(function(value){
+                    $('h1.page-header').append(value + "'s Profile");
+                    $('p.m-name').append(' ' + value);
+                });
+        // Get member's email
+        function getMemberEmail() {
+            var uid = location.href.match(/uid=(.+)/)[1];
+            var ref = firebase.database().ref('Users/' + uid);
+            var email = ref.once("value").then(function(snapshot) {
+                var email = snapshot.child("Email").val();
+                    return email;
+        });
+            return email;
+        }
+        // Append to member's profile
+        getMemberEmail().then(function(value){
+                    $('p.m-email').append(' ' + value);
+                });
+        // Get member's profile id
+        function getMemberProfileID() {
+            var uid = location.href.match(/uid=(.+)/)[1];
+            var ref = firebase.database().ref('Users/' + uid);
+            var pid = ref.once("value").then(function(snapshot) {
+                var pid = snapshot.child("ProfileID").val();
+                    return pid;
+        });
+            return pid;
+        }
+        // Append member's profile id
+        getMemberProfileID().then(function(value){
+                    $('p.m-profileid').append(' ' + value);
+                });
     </script>
 
 </body>
