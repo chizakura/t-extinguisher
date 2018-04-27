@@ -134,6 +134,22 @@ function getUserRatings() {
 	});
 }
 
+getRating = function(val)
+{
+	db.Ratings(function(Ratings) {
+	Ratings.executeSql('SELECT * FROM Ratings', [], selectedColumnValues, errorHandler);
+	
+	});
+};
+selectedColumnValues = function(Ratings, values)
+{
+	for(var rr = 0; rr < results.column.length; rr++)
+	{
+		var column = results.column.item(rr);
+		alert('success');
+		}
+}
+
 /*
  ** Function purpose: Registration - register new user
  ** registration.html
