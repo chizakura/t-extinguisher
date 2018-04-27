@@ -134,12 +134,7 @@ function getUserRatings() {
 	});
 }
 
-var rsc = new Firebase('https://t-extinguisher.firebaseio.com/');
 
-var ratingsRsc = rsc.child("Ratings");
-
-var ratingsKey = ratingsRsc.key();
-console.log(ratingsKey);
 
 /*
  ** Function purpose: Registration - register new user
