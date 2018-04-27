@@ -32,10 +32,18 @@ function initialCheck() {
 			if (location.href.indexOf('login.html') !== -1 || location.href.indexOf('registration.html') !== -1) {
 				window.location.href = 'index.html?logged_in';
 			} else if (location.href.indexOf('profile.html') !== -1) {
-				//$('h1.page-header').append(' ' + getName() + '!');
-				$('p.p-name').append(' ' + getName());
+				// Get Name of current user from database
+				getName().then(function(value){
+					$('p.p-name').append(' ' + value);
+				});
+				// Get Email of current user from database
 				$('p.p-email').append(' ' + getEmail());
-				$('p.p-profileid').append(' ' + getProfileID());
+				// Get Profile ID of current user from database 
+				getProfileID().then(function(value){
+					$('p.p-profileid').append(' ' + value);
+				});
+				// Get user id from database
+				$('p.p-uid').append(' ' + getUID());
 			}
 
 			if (!user.emailVerified) {
@@ -45,6 +53,7 @@ function initialCheck() {
 			/*if (user.displayName === null) {
 				updateName(prompt('What is your name?'));
 			}*/
+
 		} else {
 			// No user is signed in.
 			if(location.href.indexOf('login.html') === -1 && location.href.indexOf('registration.html') === -1) {
@@ -81,18 +90,45 @@ function getAllUsers() {
 	dbResult('/Users/', function(key, value) {
 		var uid = key;
 		if ($('#allmembers-table tbody tr.' + uid).length === 0) {
-			$('#allmembers-table tbody').append('<tr class="' + uid + '"><td class="userName"></td><td class="userEmail"></td><td class="userGender"></td></tr>');
+			$('#allmembers-table tbody').append(
+				'<tr class="' + uid + '"><td class="userName" id="userName' + uid + '"></td>'
+			   +'<td class="userEmail" id="userEmail' + uid + '""></td>'
+			   +'<td class="userGender" id="userGender' + uid + '""></td></tr>');
 		}
 
 		$.each(value, function(userAttr, val) {
 			if (userAttr === 'Name') {
-				$('#allcourses-table tbody tr.' + uid + ' td.userName').html('<a href="members.html?uid=' + uid + '">' + val + '</a>');
+				$('#userName' + uid).html('<a href="members_profile.html">' + val + '</a>');
 			} else if (userAttr === 'Email') {
-				$('#allcourses-table tbody tr.' + uid + ' td.userEmail').text(val);
+				$('#userEmail' + uid).text(val);
 			} else if (userAttr === 'Gender') {
-				$('#allcourses-table tbody tr.' + uid + ' td.userGender').text(val);
+				$('#userGender' + uid).text(val);
 			}
 		});
+	}, function() {
+		// Callback to retrieving DB data
+	});
+}
+
+function getUserRatings() {
+	var n = 
+	dbResult('/Ratings/', function(key, value) {
+		var pid = key;
+		if ($('#userRatings-table tbody tr.' + pid).length === 0) {
+			$('#userRatings-table tbody').append(
+				'<tr class="' + pid + '"><td class="userProfileID" id="userProfileID' + pid + '"></td>'
+			   +'<td class="userRating" id="userRating' + pid + '""></td></tr>');
+		}
+		$.each(value, function(userAttr, val) {
+			$('#userProfileID' + pid).text(userAttr);
+			$('#userRating' + pid).text(val);
+			}
+			/*
+			$.each(value, function(userAttr, val) {
+			$('#userProfileID' + uid).text(userAttr);
+			console.log(userAttr);
+			$('#userRating' + uid).text(val);*/
+		);
 	}, function() {
 		// Callback to retrieving DB data
 	});
@@ -115,9 +151,9 @@ function createNewUser(email, password, name) {
 // Helper function to: createNewUser
 function writeUserData() {
 	var userID = getUID();
-  firebase.auth().ref('Users/' + userID).set({
-    name: firebase.auth().currentUser.displayName,
-    email: firebase.auth().currentUser.email
+  	firebase.auth().ref('Users/' + userID).set({
+    	name: firebase.auth().currentUser.displayName,
+    	email: firebase.auth().currentUser.email
   });
 }
 /*
@@ -181,22 +217,59 @@ function sendPasswordReset(emailAddress) {
  ** i.e. email, name, uid (user ID)
  */
 function getEmail() {
-	return firebase.auth().currentUser.email;
+	return firebase.auth().currentUser.email; //working
 }
 
 function getName() {
-	return firebase.auth().currentUser.displayName;
+	var uid = getUID();
+	var ref = firebase.database().ref('Users/' + uid);
+	//return firebase.auth().currentUser.displayName; //currently returns null, but changes when line 45 works
+	//var result = ref.once("value").then(function(snapshot) {
+	//	return snapshot.child("Name").val();
+	//});
+	//var name = "Anonymous";
+	var name = ref.once("value")
+		.then(function(snapshot) {
+			var name = snapshot.child("Name").val();
+			return name;
+		});
+	return name;
 }
 
 function getUID() {
-	return firebase.auth().currentUser.uid;
+	return firebase.auth().currentUser.uid; //.getToken() shows blank
 }
 
 function getProfileID() {
-	var userID = firebase.auth().currentUser.uid;
+	/*var userID = firebase.auth().currentUser.uid;
 	return firebase.database().ref('/Users/' + userID + '/ProfileID').once('value').then(function(snapshot) {
 		snapshot.val().ProfileID;
-	});
+	});*/
+	
+	var uid = getUID();
+	var ref = firebase.database().ref('Users/' + uid);
+	var result = ref.once("value").then(function(snapshot) {
+		return snapshot.child("ProfileID").val();
+  	});
+  	return result;
+  	/*
+  	var uid = getUID();
+  	var ref = firebase.database().ref('Users/' + uid);
+  	let myPromise = new Promise((resolve,reject) => {
+  		setTimeout(function(){
+  			resolve("Success!");
+  		}, 250);
+  	});
+  	ref.once("value").myPromise.then(function(snapshot) => {
+  		return new Promise((resolve, reject) => {
+  			if(snapshot) {
+  				snapshot.child("ProfileID").val();
+  				resolve(snapshot);
+  			} else {
+  				reject(error);
+  			}
+  		});
+  	});*/
 }
 
 function updateName(newName) {

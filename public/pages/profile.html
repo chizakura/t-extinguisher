@@ -99,6 +99,7 @@
                 </div>
                 <!-- /.row -->
                 <div class="row">
+                <!-- User's Info Panel -->
                 <div class="col-lg-4">
                     <div class="panel panel-info">
                         <div class="panel-heading">
@@ -107,28 +108,39 @@
                         <div class="panel-body">
                             <p class="p-name">Name:</p>
                             <p class="p-email">Email:</p>
+                            <p class="p-uid">User ID:</p>
                         </div>
                         <div class="panel-footer">
                             
                         </div>
                     </div>
                 </div>
-                <!-- /.col-lg-4 -->
-                <div class="col-lg-4">
+                <!-- User's Ratings Panel -->
+                <div class="col-lg-8">
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             Your Ratings
                         </div>
+                        <!-- /.panel-heading -->
                         <div class="panel-body">
-                            <p class="p-profileid">Your ProfileID:</p>
-                            <p>Score by >>insert name here<<</p>
+                            <table width="100%" class="table table-striped table-bordered table-hover" id="userRatings-table">
+                                <thead>
+                                    <tr>
+                                        <th class="userProfileID">User's Profile ID</th>
+                                        <th class="userRating">Rating</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                            <div class="panel-footer">    
+                                <p class="p-profileid">Your Profile ID:</p>
+                                <p class="p-overallScore">Your Overall Score:</p>
+                            </div>
                         </div>
-                        <div class="panel-footer">
-                            
-                        </div>
+                        <!-- /.panel-body -->
                     </div>
                 </div>
-                <!-- /.col-lg-4 -->
+                <!-- Recently Rated Panel -->
                 <div class="col-lg-4">
                     <div class="panel panel-primary">
                         <div class="panel-heading">
@@ -142,9 +154,8 @@
                         </div>
                     </div>
                 </div>
+                </div>
                 <!-- /.row -->
-                <!-- /.col-lg-4 -->
-            </div>
             </div>
             <!-- /.container-fluid -->
         </div>
@@ -181,6 +192,13 @@
     
     <script src="../dist/js/functions.js"></script>
 
+    <script>
+    if (location.href.indexOf('uid=') !== -1) {
+        var uid = parseInt(location.href.split('uid=')[1].split('&')[0], 10);
+    } else {
+        getUserRatings();
+    }
+    </script>
 </body>
 
 </html>
