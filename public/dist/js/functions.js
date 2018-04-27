@@ -44,6 +44,7 @@ function initialCheck() {
 				});
 				// Get user id from database
 				$('p.p-uid').append(' ' + getUID());
+				// Get PhotoUrl of current user from storage
 			}
 
 			if (!user.emailVerified) {
@@ -109,30 +110,28 @@ function getAllUsers() {
 		// Callback to retrieving DB data
 	});
 }
-
+/*
 function getUserRatings() {
-	var n = 
 	dbResult('/Ratings/', function(key, value) {
 		var pid = key;
-		if ($('#userRatings-table tbody tr.' + pid).length === 0) {
-			$('#userRatings-table tbody').append(
+		getProfileID().then(function(value) {
+			if ((pid == value) == true) {
+				$('#userRatings-table tbody').append(
 				'<tr class="' + pid + '"><td class="userProfileID" id="userProfileID' + pid + '"></td>'
 			   +'<td class="userRating" id="userRating' + pid + '""></td></tr>');
-		}
-		$.each(value, function(userAttr, val) {
-			$('#userProfileID' + pid).text(userAttr);
-			$('#userRating' + pid).text(val);
 			}
-			/*
 			$.each(value, function(userAttr, val) {
-			$('#userProfileID' + uid).text(userAttr);
-			console.log(userAttr);
-			$('#userRating' + uid).text(val);*/
-		);
+			if (userAttr === '1') {
+				$('#userProfileID' + uid).text(val);
+			} else if (userAttr === '2') {
+				$('#userRating' + uid).text(val);
+			}
+		});
+		});
 	}, function() {
 		// Callback to retrieving DB data
 	});
-}
+}*/
 /*
  ** Function purpose: Registration - register new user
  ** registration.html
@@ -273,7 +272,12 @@ function getProfileID() {
 }
 
 function getPhotoUrl() {
-	return firebase.auth().currentUser.photoURL;
+	var uid = getUID();
+	var ref = firebase.storage().ref('Users/' + uid);
+	var result = ref.once("value").then(function(snapshot) {
+		return snapshot.child("Photo").val();
+	});
+	return result;
 }
 
 function updatePhoto() {
