@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-
+  
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.12&appId=468916316861485&autoLogAppEvents=1';
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
   <head>
 
     <meta charset="utf-8">
@@ -89,6 +97,7 @@
         <p class="m-0 text-center text-white">Copyright &copy; ExTinguisher 2018</p>
       </div>
       <!-- /.container -->
+      <div class="fb-like" data-href="https://developers.facebook.com/tinderextinguisher" data-layout="standard" data-action="like" data-size="small" data-show-faces="true" data-share="true"></div>
     </footer>
 
     <!-- Bootstrap core JavaScript -->
