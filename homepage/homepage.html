@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   
-<div id="fb-root"></div>
+  <div id="fb-root"></div>
 <script>(function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];
   if (d.getElementById(id)) return;
@@ -10,28 +10,8 @@
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
   
+  <div class="fb-login-button" data-max-rows="1" data-size="small" data-button-type="login_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false"></div>
   
-<script>
-  window.fbAsyncInit = function() {
-    FB.init({
-      appId      : '{468916316861485}',
-      cookie     : true,
-      xfbml      : true,
-      version    : 'v2.12'
-    });
-      
-    FB.AppEvents.logPageView();   
-      
-  };
-
-  (function(d, s, id){
-     var js, fjs = d.getElementsByTagName(s)[0];
-     if (d.getElementById(id)) {return;}
-     js = d.createElement(s); js.id = id;
-     js.src = "https://connect.facebook.net/en_US/sdk.js";
-     fjs.parentNode.insertBefore(js, fjs);
-   }(document, 'script', 'facebook-jssdk'));
-</script>
   <head>
 
     <meta charset="utf-8">
@@ -120,8 +100,7 @@
         <p class="m-0 text-center text-white">Copyright &copy; ExTinguisher 2018</p>
       </div>
       <!-- /.container -->
-      <div class="fb-like" data-href="https://developers.facebook.com/tinderextinguisher" data-layout="standard" data-action="like" data-size="small" data-show-faces="true" data-share="true"></div>
-    </footer>
+  </footer>
 
     <!-- Bootstrap core JavaScript -->
     <script src="vendor/jquery/jquery.min.js"></script>
