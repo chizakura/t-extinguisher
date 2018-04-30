@@ -130,7 +130,7 @@
                             Rate Box
                         </div>
                         <div class="panel-body">
-                            <div class="form">
+                            <form id="rateUser_form" role="form" method="get" action="members_profile.html">
                                 <div class="form-group">
                                     <label class="radio-inline">
                                         <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline1" value="option1" checked>1
@@ -142,29 +142,29 @@
                                         <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline3" value="option3">3
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline3" value="option3">4
+                                        <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline4" value="option4">4
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline3" value="option3">5
+                                        <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline5" value="option5">5
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline3" value="option3">6
+                                        <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline6" value="option6">6
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline3" value="option3">7
+                                        <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline7" value="option7">7
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline3" value="option3">8
+                                        <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline8" value="option8">8
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline3" value="option3">9
+                                        <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline9" value="option9">9
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline3" value="option3">10
+                                        <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline10" value="option10">10
                                     </label>
                                 </div>
-                            <button type="submit" class="btn btn-default">Submit Button</button>
-                            </div>
+                            <button type="submit" class="btn btn-default" onclick="rateUser(this.form)">Submit Button</button>
+                            </form>
                         </div>
                         <div class="panel-footer">
                             <p>On a scale of 1 (worst) to 10 (best), please rate this person.</p>
@@ -224,7 +224,7 @@
     </script>
     
     <script src="../dist/js/functions.js"></script>
-
+    
     <script>
         // Get member's name
         function getMemberName() {
@@ -269,6 +269,11 @@
         getMemberProfileID().then(function(value){
                     $('p.m-profileid').append(' ' + value);
                 });
+        // Submit a rating for user
+        function rateUser(userScore) {
+            var num = userScore.inputbox.value;
+            alert("You selected " + num + " as your rating for this user");
+        }
     </script>
 
 </body>

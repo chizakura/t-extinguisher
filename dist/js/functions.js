@@ -38,7 +38,7 @@ function initialCheck() {
 				});
 				// Get Email of current user from database
 				$('p.p-email').append(' ' + getEmail());
-				// Get Profile ID of current user from database 
+				// Get Profile ID of current user from database
 				getProfileID().then(function(value){
 					$('p.p-profileid').append(' ' + value);
 				});
@@ -80,7 +80,10 @@ function dbResult(path, result, after) {
 			result(index, item);
 		});
 	}, function() {
-		after();
+		/*
+		* commented to avoid unchecked exception.
+		*/
+		//after();
 	});
 }
 /*
@@ -110,44 +113,27 @@ function getAllUsers() {
 		// Callback to retrieving DB data
 	});
 }
-/*
-function getUserRatings() {
-	dbResult('/Ratings/', function(key, value) {
-		var pid = key;
-		getProfileID().then(function(value) {
-			if ((pid == value) == true) {
-				$('#userRatings-table tbody').append(
-				'<tr class="' + pid + '"><td class="userProfileID" id="userProfileID' + pid + '"></td>'
-			   +'<td class="userRating" id="userRating' + pid + '""></td></tr>');
-			}
-			$.each(value, function(userAttr, val) {
-				$('#userProfileID' + uid).text(userAttr);
-				$('#userRating' + uid).text(val);
-			}
-		});
-		});
-	}, function() {
-		// Callback to retrieving DB data
-	});
-}
-*/
-function getUserRatings() {
-	dbResult('/Ratings/', function(key,value) {
-		var pid = key;
-		getProfileID().then(function(value) {
-			if ((pid == value) == true) {
-				$('#userRatings-table tbody').append(
-				'<tr class="' + pid + '"><td class="userProfileID" id="userProfileID' + pid + '"></td>'
-			    +'<td class="userRating" id="userRating' + pid + '""></td></tr>');
-			}
-			$.each(value, function(userAttr, val) {
-				$('#userProfileID' + uid).text(userAttr);
-				$('#userRating' + uid).text(val);
-			}
-		});
-	});, function() {
-			// Callback to retrieving DB data
-		}
+
+function getUserRatings(){
+    dbResult('/Ratings/', function(key,value) {
+        var pid = key;
+        getProfileID().then(function(idValue){
+            if(pid == idValue) {
+                $.each(value, function(userAttr, val){
+                    $('#userRatings-table tbody').append('<tr class ="' + userAttr +
+                        '"><td class="userProfileID" id="userProfileID' + userAttr +
+                        '"><td class="userRating" id = "userRating' + userAttr +
+                        '">');
+                    $('#userProfileID' + userAttr).text(userAttr);
+                    $('#userRating' + userAttr).text(val);
+                });
+            } /*else if ($('#userRatings-table tbody tr.' + pid).length === 0) {
+                $('#userRatings-table tbody').append('<tr><td colspan="2">No data available in table</td></tr>');
+            }*/
+        }, function(){
+            // if you need an additional callback function it should be here I believe
+        });
+    });
 }
 /*
  ** Function purpose: Registration - register new user
@@ -162,14 +148,14 @@ function createNewUser(email, password, name) {
 		var errorMessage = error.message;
 		alert(errorMessage);
 	});
-	writeUserData();
+	writeUserData(email, name);
 }
 // Helper function to: createNewUser
-function writeUserData() {
+function writeUserData(email, name) {
 	var userID = getUID();
   	firebase.auth().ref('Users/' + userID).set({
-    	name: firebase.auth().currentUser.displayName,
-    	email: firebase.auth().currentUser.email
+    	name: name,
+    	email: email
   });
 }
 /*
@@ -220,7 +206,7 @@ function sendEmailVerification() {
  **
  ** Output: Alert
  */
-function sendPasswordReset(emailAddress) {
+function sendPasswordReset(emailAddress) { // not used
 	firebase.auth().sendPasswordResetEmail(emailAddress).then(function() {
 		// Email sent.
 		alert('Password reset email has been sent.');
@@ -230,20 +216,15 @@ function sendPasswordReset(emailAddress) {
 }
 /*
  ** Function purpose: User data - access information about the existing user
- ** i.e. email, name, uid (user ID)
+ ** i.e. email, name, uid (user ID), profile ID, profile picture
  */
 function getEmail() {
-	return firebase.auth().currentUser.email; //working
+	return firebase.auth().currentUser.email;
 }
 
 function getName() {
 	var uid = getUID();
 	var ref = firebase.database().ref('Users/' + uid);
-	//return firebase.auth().currentUser.displayName; //currently returns null, but changes when line 45 works
-	//var result = ref.once("value").then(function(snapshot) {
-	//	return snapshot.child("Name").val();
-	//});
-	//var name = "Anonymous";
 	var name = ref.once("value")
 		.then(function(snapshot) {
 			var name = snapshot.child("Name").val();
@@ -253,39 +234,16 @@ function getName() {
 }
 
 function getUID() {
-	return firebase.auth().currentUser.uid; //.getToken() shows blank
+	return firebase.auth().currentUser.uid; // .getToken() shows blank
 }
 
 function getProfileID() {
-	/*var userID = firebase.auth().currentUser.uid;
-	return firebase.database().ref('/Users/' + userID + '/ProfileID').once('value').then(function(snapshot) {
-		snapshot.val().ProfileID;
-	});*/
-	
 	var uid = getUID();
 	var ref = firebase.database().ref('Users/' + uid);
 	var result = ref.once("value").then(function(snapshot) {
 		return snapshot.child("ProfileID").val();
   	});
   	return result;
-  	/*
-  	var uid = getUID();
-  	var ref = firebase.database().ref('Users/' + uid);
-  	let myPromise = new Promise((resolve,reject) => {
-  		setTimeout(function(){
-  			resolve("Success!");
-  		}, 250);
-  	});
-  	ref.once("value").myPromise.then(function(snapshot) => {
-  		return new Promise((resolve, reject) => {
-  			if(snapshot) {
-  				snapshot.child("ProfileID").val();
-  				resolve(snapshot);
-  			} else {
-  				reject(error);
-  			}
-  		});
-  	});*/
 }
 
 function getPhotoUrl() {
@@ -297,7 +255,7 @@ function getPhotoUrl() {
 	return result;
 }
 
-function updatePhoto() {
+function updatePhoto() { // under construction
 	// Get current user
 	var user = firebase.auth().currentUser;
 	// Create a storage ref w/ user
@@ -315,7 +273,7 @@ function updatePhoto() {
 	})*/
 }
 
-function updateName(newName) {
+function updateName(newName) { // not used
 	var user = firebase.auth().currentUser;
 
 	user.updateProfile({

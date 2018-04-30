@@ -141,6 +141,9 @@
                                     </tr>
                                 </thead>
                                 <tbody><!--
+                                    <tr class="odd">
+                                        <td valign="top" colspan="2" class="dataTables_empty">No data available in table</td>
+                                    </tr>
                                     <tr>
                                         <td>1</td>
                                         <td>8</td>
@@ -265,9 +268,16 @@
 
     <!-- Page-Level Demo Scripts - Tables - Use for reference -->
     <!--<script>
+    var dataset = [
+        [1,6]
+    ];
     $(document).ready(function() {
         $('#userRatings-table').DataTable({
-            responsive: true
+            data: dataset,
+            columns: [
+                {title: "User's Profile ID"},
+                {title: "Rating"}
+            ]
         });
     });
     </script>-->
@@ -287,13 +297,19 @@
     </script>
     
     <script src="../dist/js/functions.js"></script>
-
+    
     <script>
-    if (location.href.indexOf('uid=') !== -1) {
-        var uid = parseInt(location.href.split('uid=')[1].split('&')[0], 10);
-    } else {
         getUserRatings();
-    }
+    /*
+    $(document).ready(function() {
+        $('#userRatings-table').DataTable({
+            data: dataset,
+            columns: [
+                {title: "User's Profile ID"},
+                {title: "Rating"}
+            ]
+        });
+    });*/
     </script>
 </body>
 
