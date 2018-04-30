@@ -121,9 +121,7 @@ function getUserRatings() {
 			   +'<td class="userRating" id="userRating' + pid + '""></td></tr>');
 			}
 			$.each(value, function(userAttr, val) {
-			if (userAttr === '1') {
-				$('#userProfileID' + uid).text(val);
-			} else if (userAttr === '2') {
+				$('#userProfileID' + uid).text(userAttr);
 				$('#userRating' + uid).text(val);
 			}
 		});
@@ -131,7 +129,26 @@ function getUserRatings() {
 	}, function() {
 		// Callback to retrieving DB data
 	});
-}*/
+}
+*/
+function getUserRatings() {
+	dbResult('/Ratings/', function(key,value) {
+		var pid = key;
+		getProfileID().then(function(value) {
+			if ((pid == value) == true) {
+				$('#userRatings-table tbody').append(
+				'<tr class="' + pid + '"><td class="userProfileID" id="userProfileID' + pid + '"></td>'
+			    +'<td class="userRating" id="userRating' + pid + '""></td></tr>');
+			}
+			$.each(value, function(userAttr, val) {
+				$('#userProfileID' + uid).text(userAttr);
+				$('#userRating' + uid).text(val);
+			}
+		});
+	});, function() {
+			// Callback to retrieving DB data
+		}
+}
 /*
  ** Function purpose: Registration - register new user
  ** registration.html
