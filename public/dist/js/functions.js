@@ -44,16 +44,15 @@ function initialCheck() {
 				});
 				// Get user id from database
 				$('p.p-uid').append(' ' + getUID());
-				// Get PhotoUrl of current user from storage
+				// Get overall score of current user from database
+				getOverallScore().then(function(value){
+            		$('p.p-overallScore').append(' ' + value);
+       			 });
 			}
 
 			if (!user.emailVerified) {
 				sendEmailVerification();
 			}
-
-			/*if (user.displayName === null) {
-				updateName(prompt('What is your name?'));
-			}*/
 
 		} else {
 			// No user is signed in.
@@ -141,21 +140,36 @@ function getUserRatings(){
  **
  ** Required input: Name, email, password
  */
-function createNewUser(email, password, name) {
-	firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+async function createNewUser(email, password, name) {
+	let ref = firebase.database().ref('Users/');
+	let val = await firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
 		// Handle errors here
 		var errorCode = error.code;
 		var errorMessage = error.message;
 		alert(errorMessage);
 	});
-	writeUserData(email, name);
+	let uid = getUID();
+	ref.child(uid).set({
+		'Email': email,
+		'Gender': "undefined",
+		'Name': name,
+		'Overall': 0,
+		'ProfileID': "undefined"
+	});
+	//writeUserData(email, name);
+	console.log(email);
 }
 // Helper function to: createNewUser
 function writeUserData(email, name) {
-	var userID = getUID();
-  	firebase.auth().ref('Users/' + userID).set({
-    	name: name,
-    	email: email
+	var uid = getUID();
+  	firebase.auth().ref('Users/').set({
+  		uid: {
+  			Email: email,
+  			Gender: "undefined",
+  			Name: name,
+  			ProfileID: "undefined"
+  			
+  		}
   });
 }
 /*
@@ -244,6 +258,15 @@ function getProfileID() {
 		return snapshot.child("ProfileID").val();
   	});
   	return result;
+}
+
+function getOverallScore() {
+    var uid = getUID();
+    var ref = firebase.database().ref('Users/' + uid);
+    var result = ref.once("value").then(function(snapshot) {
+        return snapshot.child("Overall").val();
+    });
+    return result;
 }
 
 function getPhotoUrl() {

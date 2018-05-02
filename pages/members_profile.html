@@ -68,7 +68,6 @@
                 <!-- /.dropdown -->
             </ul>
             <!-- /.navbar-top-links -->
-
             <div class="navbar-default sidebar" role="navigation">
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
@@ -79,7 +78,7 @@
                             <a href="members.html"><i class="fa fa-list-alt fa-fw"></i> Members List</a>
                         </li>
                         <li>
-                            <a href="#"><i class="fa fa-group fa-fw"></i> Dates<span class="fa arrow"></span></a>
+                            <a href="#"><i class="fa fa-fire-extinguisher fa-fw"></i> Dates<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
                                     <a href="dates_list.html"> List of Dates</a>
@@ -103,15 +102,15 @@
                     <div class="col-lg-12">
                         <h1 class="page-header"></h1>
                     </div>
-                    <!-- /.col-lg-12 -->
                 </div>
                 <!-- /.row -->
                 <div class="row">
-                <div class="col-lg-4">
-                    <div class="panel panel-info">
-                        <div class="panel-heading">
-                            Profile Info
-                        </div>
+                    <!-- /.col-lg-4 -->
+                    <div class="col-lg-4">
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                <i class="fa fa-user fa-fw"></i> Profile Info
+                            </div>
                         <div class="panel-body">
                             <img class="m-picture" src="https://firebasestorage.googleapis.com/v0/b/t-extinguisher.appspot.com/o/no-avatar.png?alt=media&token=1e9ace7d-91cf-405f-9c1a-0ca5134939f9" alt=""/>
                         </div>
@@ -121,74 +120,95 @@
                             <p class="m-profileid">Profile ID:</p>
                             <p class="m-overallScore">Overall Score:</p>
                         </div>
-                    </div>
-                </div>
-                <!-- /.col-lg-4 -->
-                <div class="col-lg-8">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            Rate Box
                         </div>
+                    </div>
+                    <!-- /.end of col-lg-4 -->
+                    <!-- /.col-lg-8 -->
+                    <div class="col-lg-8">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <i class="fa fa-flag fa-fw"></i> Rate Box
+                            </div>
                         <div class="panel-body">
                             <form id="rateUser_form" role="form" method="get" action="members_profile.html">
                                 <div class="form-group">
                                     <label class="radio-inline">
-                                        <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline1" value="option1" checked>1
+                                        <input type="radio" name="optionsRadiosInline1" id="optionsRadiosInline1" value="1" checked>1
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline2" value="option2">2
+                                        <input type="radio" name="optionsRadiosInline2" id="optionsRadiosInline2" value="2">2
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline3" value="option3">3
+                                        <input type="radio" name="optionsRadiosInline3" id="optionsRadiosInline3" value="3">3
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline4" value="option4">4
+                                        <input type="radio" name="optionsRadiosInline4" id="optionsRadiosInline4" value="4">4
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline5" value="option5">5
+                                        <input type="radio" name="optionsRadiosInline5" id="optionsRadiosInline5" value="5">5
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline6" value="option6">6
+                                        <input type="radio" name="optionsRadiosInline6" id="optionsRadiosInline6" value="6">6
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline7" value="option7">7
+                                        <input type="radio" name="optionsRadiosInline7" id="optionsRadiosInline7" value="7">7
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline8" value="option8">8
+                                        <input type="radio" name="optionsRadiosInline8" id="optionsRadiosInline8" value="8">8
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline9" value="option9">9
+                                        <input type="radio" name="optionsRadiosInline9" id="optionsRadiosInline9" value="o9">9
                                     </label>
                                     <label class="radio-inline">
-                                        <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline10" value="option10">10
+                                        <input type="radio" name="optionsRadiosInline10" id="optionsRadiosInline10" value="10">10
                                     </label>
                                 </div>
-                            <button type="submit" class="btn btn-default" onclick="rateUser(this.form)">Submit Button</button>
+                                <button type="submit" class="btn btn-default" onclick="rateUser(this.form)">Submit Button</button>
                             </form>
                         </div>
                         <div class="panel-footer">
                             <p>On a scale of 1 (worst) to 10 (best), please rate this person.</p>
                         </div>
+                        </div>
                     </div>
-                </div>
-                <!-- /.col-lg-4 -->
-                <!--
-                <div class="col-lg-4">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            Recently Rated
+                    <!-- /.end of col-lg-8 -->
+                    <!-- /.chat panel -->
+                    <div class="col-lg-8">
+                        <!-- /.chat heading -->
+                        <div class="chat-panel panel panel-default">
+                            <div class="panel-heading">
+                                <i class="fa fa-comments fa-fw"></i> Comments
+                            </div>
                         </div>
                         <div class="panel-body">
-                            <p>>>insert name here<<</p>
+                            <div class="well well-sm">
+                                <strong class="primary-font">Name test</strong>
+                                    <small class="pull-right text-muted">
+                                        <i class="fa fa-clock-o fa-fw"></i> 12 mins ago
+                                    </small>
+                                <p>Comment test</p>
+                            </div>
+                            <div class="well well-sm">
+                                <strong class="primary-font">Name test</strong>
+                                    <small class="pull-right text-muted">
+                                        <i class="fa fa-clock-o fa-fw"></i> 12 mins ago
+                                    </small>
+                            
+                                <p>Comment test</p>
+                            </div>
                         </div>
                         <div class="panel-footer">
-                            
+                            <div class="input-group">
+                                <input id="btn-input" type="text" class="form-control input-sm" placeholder="Leave a comment here..." />
+                                <span class="input-group-btn">
+                                    <button class="btn btn-warning btn-sm" id="btn-chat">Send</button>
+                                </span>
+                            </div>
                         </div>
                     </div>
-                </div>-->
-                <!-- /.col-lg-4 -->
-            </div>
-            <!-- /.row -->
+                    <!-- /.end of chat panel-heading -->
+                </div>
+                <!-- /.row -->
             </div>
             <!-- /.container-fluid -->
         </div>
@@ -224,51 +244,26 @@
     </script>
     
     <script src="../dist/js/functions.js"></script>
+    <script src="../dist/js/members.js"></script>
     
     <script>
-        // Get member's name
-        function getMemberName() {
-            var uid = location.href.match(/uid=(.+)/)[1];
-            var ref = firebase.database().ref('Users/' + uid);
-            var name = ref.once("value").then(function(snapshot) {
-                var name = snapshot.child("Name").val();
-                    return name;
-        });
-            return name;
-        }
         // Append to member's profile
         getMemberName().then(function(value){
                     $('h1.page-header').append(value + "'s Profile");
                     $('p.m-name').append(' ' + value);
                 });
-        // Get member's email
-        function getMemberEmail() {
-            var uid = location.href.match(/uid=(.+)/)[1];
-            var ref = firebase.database().ref('Users/' + uid);
-            var email = ref.once("value").then(function(snapshot) {
-                var email = snapshot.child("Email").val();
-                    return email;
-        });
-            return email;
-        }
         // Append to member's profile
         getMemberEmail().then(function(value){
                     $('p.m-email').append(' ' + value);
                 });
-        // Get member's profile id
-        function getMemberProfileID() {
-            var uid = location.href.match(/uid=(.+)/)[1];
-            var ref = firebase.database().ref('Users/' + uid);
-            var pid = ref.once("value").then(function(snapshot) {
-                var pid = snapshot.child("ProfileID").val();
-                    return pid;
-        });
-            return pid;
-        }
         // Append member's profile id
         getMemberProfileID().then(function(value){
                     $('p.m-profileid').append(' ' + value);
                 });
+        // Append member's overall score
+        getMemberOverallScore().then(function(value){
+                    $('p.m-overallScore').append(' ' + value);
+                 });
         // Submit a rating for user
         function rateUser(userScore) {
             var num = userScore.inputbox.value;
