@@ -111,8 +111,8 @@
                             <div class="panel-heading">
                                 <i class="fa fa-user fa-fw"></i> Profile Info
                             </div>
-                        <div class="panel-body">
-                            <img class="m-picture" src="https://firebasestorage.googleapis.com/v0/b/t-extinguisher.appspot.com/o/no-avatar.png?alt=media&token=1e9ace7d-91cf-405f-9c1a-0ca5134939f9" alt=""/>
+                        <div class="panel-body" id="photo-body">
+                            <img id="m-picture" src="" alt=""/>
                         </div>
                         <div class="panel-footer">
                             <p class="m-name">Name:</p>
@@ -247,6 +247,92 @@
     <script src="../dist/js/members.js"></script>
     
     <script>
+        var uid = location.href.match(/uid=(.+)/)[1];
+        var db = firebase.database().ref('Users/' + uid);
+        var storage = firebase.storage();
+        
+        function getMemberPhotoUrl() {
+            var gsRef = storage.refFromURL('gs://t-extinguisher.appspot.com/no-avatar.png');
+            var checkPhoto = db.once("value").then(function(snapshot) {
+                return snapshot.child("Photo").exists();
+            });
+
+            if(checkPhoto == true) {
+                db.once("value").then(function(snapshot) {
+                    var url = snapshot.child("Photo").val();
+                    var img = document.getElementById('m-picture');
+                        img.src = url;
+                });
+            } else {
+                gsRef.getDownloadURL().then(function(url) {
+                var img = document.getElementById('m-picture');
+                    img.src = url;
+                }).catch(function(error) {
+                // Handle any errors
+                });
+            }
+        }
+        /*
+         ** Helper function to: dbResult
+         */
+        function retrieveFrom(path, callback, after) {
+            firebase.database().ref(path).once('value', function(snap) {
+                callback(snap.val());
+            }).then(function() {
+                after();
+            });
+        }
+
+        function dbResult(path, result, after) {
+            retrieveFrom(path, function(data) {
+                $.each(data, function (index, item) {
+                    result(index, item);
+                });
+            }, function() {
+                /*
+                * commented to avoid unchecked exception.
+                */
+                //after();
+            });
+        }
+        // Helper functions to: calculateScore
+        function common (avg, min, max) {
+            return (avg >= min) && (avg <= max);
+        }
+        // Get overall score of member
+        function calculateMemberScore() {
+            dbResult('/Ratings/', function(key,value) {
+                var pid = key;
+                var arr = [];
+                var A = 0.8;
+                var B = 0.9;
+                var z = 1 - Math.pow(Math.E,-1);
+                
+                getMemberProfileID().then(function(idValue){
+                    if(pid == idValue) {
+                        $.each(value, function(userAttr, val){
+                            arr.push(val);
+                        });
+
+                        const reducer = (accumulator, currentValue) => accumulator + currentValue;
+                        var sum = arr.reduce(reducer);
+                        var avg = sum / arr.length;
+
+                        if(common(avg, 4, 10)) {
+                            var scoreA = (A * avg + 10 * (1-A) * z).toFixed(2);
+                            $('p.m-overallScore').append(' ' + scoreA);
+                        } else if (common(avg, 0, 4)) {
+                            var scoreB = (A * avg + 10 * (1-B) * z).toFixed(2);
+                            $('p.m-overallScore').append(' ' + scoreB);
+                        } else {
+                            $('p.m-overallScore').append(' ' + sum);
+                        }
+                    }
+                }, function(){
+                    // if you need an additional callback function it should be here I believe
+                });
+            });
+        }
         // Append to member's profile
         getMemberName().then(function(value){
                     $('h1.page-header').append(value + "'s Profile");
@@ -256,14 +342,14 @@
         getMemberEmail().then(function(value){
                     $('p.m-email').append(' ' + value);
                 });
-        // Append member's profile id
+        // Append member's profile ID
         getMemberProfileID().then(function(value){
                     $('p.m-profileid').append(' ' + value);
                 });
+        // Append member's profile picture
+        getMemberPhotoUrl();
         // Append member's overall score
-        getMemberOverallScore().then(function(value){
-                    $('p.m-overallScore').append(' ' + value);
-                 });
+        calculateMemberScore();
         // Submit a rating for user
         function rateUser(userScore) {
             var num = userScore.inputbox.value;
