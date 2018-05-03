@@ -1,6 +1,6 @@
 var A = 0.8;
 var B = 0.9;
-var p = [array from db];
+var p = [8, 10, 9, 5, 4, 6, 4, 7, 7, 8, 4, 10, 3, 5, 3, 8, 5, 9, 4, 5];
 var sum = p.reduce(add,0);
 var avg = sum / p.length;
 var z = 1 - Math.pow(Math.E,-1);

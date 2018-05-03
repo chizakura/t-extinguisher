@@ -113,8 +113,9 @@
                         <div class="panel-heading">
                             <i class="fa fa-user fa-fw"></i> Account Info
                         </div>
-                        <div class="panel-body">
-                            <img class="p-picture" src="https://firebasestorage.googleapis.com/v0/b/t-extinguisher.appspot.com/o/no-avatar.png?alt=media&token=1e9ace7d-91cf-405f-9c1a-0ca5134939f9" alt=""/>
+                        <div class="panel-body" id="photo-body">
+                            <img id="p-picture" src="" alt=""/>
+                            <!--<img class="p-picture" src="https://firebasestorage.googleapis.com/v0/b/t-extinguisher.appspot.com/o/no-avatar.png?alt=media&token=1e9ace7d-91cf-405f-9c1a-0ca5134939f9" alt=""/>-->
                         </div>
                         <div class="panel-footer">
                             <!-- <p class="p-uid">User ID:</p> -->
@@ -299,7 +300,7 @@
     <script src="../dist/js/functions.js"></script>
     
     <script>
-        getUserRatings();
+    getUserRatings();
 
     /*
     $(document).ready(function() {

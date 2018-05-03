@@ -32,22 +32,25 @@ function initialCheck() {
 			if (location.href.indexOf('login.html') !== -1 || location.href.indexOf('registration.html') !== -1) {
 				window.location.href = 'index.html?logged_in';
 			} else if (location.href.indexOf('profile.html') !== -1) {
-				// Get Name of current user from database
+				// Get name of current user from database
 				getName().then(function(value){
 					$('p.p-name').append(' ' + value);
 				});
-				// Get Email of current user from database
+				// Get email of current user from database
 				$('p.p-email').append(' ' + getEmail());
-				// Get Profile ID of current user from database
+				// Get profile ID of current user from database
 				getProfileID().then(function(value){
 					$('p.p-profileid').append(' ' + value);
 				});
-				// Get user id from database
+				// Get user ID from database
 				$('p.p-uid').append(' ' + getUID());
 				// Get overall score of current user from database
 				getOverallScore().then(function(value){
             		$('p.p-overallScore').append(' ' + value);
        			 });
+				// Get photo url of current user
+				getPhotoUrl();
+				//$('#photo-body').append('<img class="p-picture" src="' + getPhotoUrl() + '" alt=""/>');
 			}
 
 			if (!user.emailVerified) {
@@ -112,7 +115,10 @@ function getAllUsers() {
 		// Callback to retrieving DB data
 	});
 }
-
+/*
+** Function purpose: Display list of all ratings for current user
+** profile.html
+*/
 function getUserRatings(){
     dbResult('/Ratings/', function(key,value) {
         var pid = key;
@@ -138,7 +144,7 @@ function getUserRatings(){
  ** Function purpose: Registration - register new user
  ** registration.html
  **
- ** Required input: Name, email, password
+ ** Required input: name, email, password
  */
 async function createNewUser(email, password, name) {
 	let ref = firebase.database().ref('Users/');
@@ -156,27 +162,26 @@ async function createNewUser(email, password, name) {
 		'Overall': 0,
 		'ProfileID': "undefined"
 	});
-	//writeUserData(email, name);
-	console.log(email);
+	// writeUserData(email, name);
+	//console.log(email);
 }
 // Helper function to: createNewUser
 function writeUserData(email, name) {
 	var uid = getUID();
-  	firebase.auth().ref('Users/').set({
-  		uid: {
-  			Email: email,
-  			Gender: "undefined",
-  			Name: name,
-  			ProfileID: "undefined"
-  			
-  		}
-  });
+	firebase.auth().ref('Users/').set({
+		uid: {
+			Email: email,
+			Gender: "undefined",
+			Name: name,
+			ProfileID: "undefined"
+		}
+	});
 }
 /*
  ** Function purpose: Login - authenticate existing user
  ** login.html
  **
- ** Required input: Email, password
+ ** Required input: email, password
  */
 function signInExistingUser(email, password) {
 	firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
@@ -216,7 +221,7 @@ function sendEmailVerification() {
 /*
  ** Function purpose: Reset password
  **
- ** Required input: Email
+ ** Required input: email
  **
  ** Output: Alert
  */
@@ -254,28 +259,44 @@ function getUID() {
 function getProfileID() {
 	var uid = getUID();
 	var ref = firebase.database().ref('Users/' + uid);
-	var result = ref.once("value").then(function(snapshot) {
+	var pid = ref.once("value").then(function(snapshot) {
 		return snapshot.child("ProfileID").val();
   	});
-  	return result;
+  	return pid;
 }
 
 function getOverallScore() {
     var uid = getUID();
     var ref = firebase.database().ref('Users/' + uid);
-    var result = ref.once("value").then(function(snapshot) {
+    var score = ref.once("value").then(function(snapshot) {
         return snapshot.child("Overall").val();
     });
-    return result;
+    return score;
 }
 
 function getPhotoUrl() {
 	var uid = getUID();
-	var ref = firebase.storage().ref('Users/' + uid);
-	var result = ref.once("value").then(function(snapshot) {
-		return snapshot.child("Photo").val();
+	var db = firebase.database().ref('Users/' + uid);
+	var storage = firebase.storage();
+	var gsRef = storage.refFromURL('gs://t-extinguisher.appspot.com/no-avatar.png');
+	var checkPhoto = db.once("value").then(function(snapshot) {
+		return snapshot.child("Photo").exists();
 	});
-	return result;
+
+	if(checkPhoto == true) {
+		db.once("value").then(function(snapshot) {
+			var url = snapshot.child("Photo").val();
+			var img = document.getElementById('p-picture');
+				img.src = url;
+		});
+	} else {
+		gsRef.getDownloadURL().then(function(url) {
+		var img = document.getElementById('p-picture');
+			img.src = url;
+		}).catch(function(error) {
+		// Handle any errors
+		});
+	}
 }
 
 function updatePhoto() { // under construction
