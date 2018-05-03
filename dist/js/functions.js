@@ -45,12 +45,11 @@ function initialCheck() {
 				// Get user ID from database
 				$('p.p-uid').append(' ' + getUID());
 				// Get overall score of current user from database
-				getOverallScore().then(function(value){
-            		$('p.p-overallScore').append(' ' + value);
-       			 });
+				calculateScore();
 				// Get photo url of current user
 				getPhotoUrl();
-				//$('#photo-body').append('<img class="p-picture" src="' + getPhotoUrl() + '" alt=""/>');
+				// List all ratings of current user
+				getUserRatings();
 			}
 
 			if (!user.emailVerified) {
@@ -146,6 +145,20 @@ function getUserRatings(){
  **
  ** Required input: name, email, password
  */
+ 
+ // Helper function to: createNewUser
+function writeUserData(email, name) {
+	let uid = getUID();
+	let ref = firebase.database().ref('Users/');
+	ref.child(uid).set({
+		'Email': email,
+		'Gender': "undefined",
+		'Name': name,
+		'Overall': 0,
+		'ProfileID': 0
+	});
+}
+
 async function createNewUser(email, password, name) {
 	let ref = firebase.database().ref('Users/');
 	let val = await firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
@@ -154,28 +167,7 @@ async function createNewUser(email, password, name) {
 		var errorMessage = error.message;
 		alert(errorMessage);
 	});
-	let uid = getUID();
-	ref.child(uid).set({
-		'Email': email,
-		'Gender': "undefined",
-		'Name': name,
-		'Overall': 0,
-		'ProfileID': "undefined"
-	});
-	// writeUserData(email, name);
-	//console.log(email);
-}
-// Helper function to: createNewUser
-function writeUserData(email, name) {
-	var uid = getUID();
-	firebase.auth().ref('Users/').set({
-		uid: {
-			Email: email,
-			Gender: "undefined",
-			Name: name,
-			ProfileID: "undefined"
-		}
-	});
+	writeUserData(email, name);
 }
 /*
  ** Function purpose: Login - authenticate existing user
@@ -235,7 +227,7 @@ function sendPasswordReset(emailAddress) { // not used
 }
 /*
  ** Function purpose: User data - access information about the existing user
- ** i.e. email, name, uid (user ID), profile ID, profile picture
+ ** i.e. email, name, uid (user ID), profile ID, overall score, profile picture
  */
 function getEmail() {
 	return firebase.auth().currentUser.email;
@@ -265,6 +257,11 @@ function getProfileID() {
   	return pid;
 }
 
+// Helper functions to: calculateScore
+function common (avg, min, max) {
+    return (avg >= min) && (avg <= max);
+}
+
 function getOverallScore() {
     var uid = getUID();
     var ref = firebase.database().ref('Users/' + uid);
@@ -272,6 +269,40 @@ function getOverallScore() {
         return snapshot.child("Overall").val();
     });
     return score;
+}
+
+function calculateScore() {
+	dbResult('/Ratings/', function(key,value) {
+        var pid = key;
+        var arr = [];
+        var A = 0.8;
+        var B = 0.9;
+        var z = 1 - Math.pow(Math.E,-1);
+        
+        getProfileID().then(function(idValue){
+	        if(pid == idValue) {
+                $.each(value, function(userAttr, val){
+                    arr.push(val);
+                });
+
+                const reducer = (accumulator, currentValue) => accumulator + currentValue;
+        		var sum = arr.reduce(reducer);
+        		var avg = sum / arr.length;
+
+                if(common(avg, 4, 10)) {
+                	var scoreA = (A * avg + 10 * (1-A) * z).toFixed(2);
+                	$('p.p-overallScore').append(' ' + scoreA);
+                } else if (common(avg, 0, 4)) {
+                	var scoreB = (A * avg + 10 * (1-B) * z).toFixed(2);
+					$('p.p-overallScore').append(' ' + scoreB);
+				} else {
+					$('p.p-overallScore').append(' ' + sum);
+				}
+            }
+        }, function(){
+            // if you need an additional callback function it should be here I believe
+        });
+    });
 }
 
 function getPhotoUrl() {
@@ -298,7 +329,10 @@ function getPhotoUrl() {
 		});
 	}
 }
-
+/*
+ ** Function purpose: User data - update information about the existing user
+ ** i.e. name, profile picture
+ */
 function updatePhoto() { // under construction
 	// Get current user
 	var user = firebase.auth().currentUser;
