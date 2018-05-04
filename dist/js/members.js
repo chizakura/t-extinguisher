@@ -49,14 +49,6 @@ function getMemberProfileID() {
     });
     return pid;
 }
-// Get member's overall score
-function getMemberOverallScore() {
-    var score = db.once("value").then(function(snapshot) {
-        var score = snapshot.child("Overall").val();
-            return score;
-    });
-    return score;
-}
 // Get member's profile picture
 function getMemberPhotoUrl() {
     var gsRef = storage.refFromURL('gs://t-extinguisher.appspot.com/no-avatar.png');
@@ -130,7 +122,7 @@ function getComments() {
                 if (attr === 'name') {
                     $('#postName' + key).text(val);
                 } else if (attr === 'postedAt') {
-                    $('#postTime' + key).text(val);
+                    $('#postTime' + key).append('<i class="fa fa-clock-o fa-fw"></i>' + val);
                 } else if (attr === 'message') {
                     $('#postMessage' + key).text(val);
                 }
