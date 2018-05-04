@@ -173,37 +173,29 @@
                     </div>
                     <!-- /.end of col-lg-8 -->
                     <!-- /.chat panel -->
-                    <div class="col-lg-8">
+                    <div class="col-lg-8" id="comment-body">
                         <!-- /.chat heading -->
                         <div class="chat-panel panel panel-default">
                             <div class="panel-heading">
                                 <i class="fa fa-comments fa-fw"></i> Comments
                             </div>
                         </div>
-                        <div class="panel-body">
+                        <div class="panel-body"><!--
                             <div class="well well-sm">
                                 <strong class="primary-font">Name test</strong>
                                     <small class="pull-right text-muted">
                                         <i class="fa fa-clock-o fa-fw"></i> 12 mins ago
                                     </small>
                                 <p>Comment test</p>
-                            </div>
-                            <div class="well well-sm">
-                                <strong class="primary-font">Name test</strong>
-                                    <small class="pull-right text-muted">
-                                        <i class="fa fa-clock-o fa-fw"></i> 12 mins ago
-                                    </small>
-                            
-                                <p>Comment test</p>
-                            </div>
+                            </div>-->
                         </div>
                         <div class="panel-footer">
-                            <div class="input-group">
-                                <input id="btn-input" type="text" class="form-control input-sm" placeholder="Leave a comment here..." />
+                            <form class="input-group" id="comment">
+                                <input type="text" id="message" name="message" class="form-control input-sm" placeholder="Leave a comment here..." />
                                 <span class="input-group-btn">
-                                    <button class="btn btn-warning btn-sm" id="btn-chat">Send</button>
+                                    <button type="submit" class="btn btn-warning btn-sm" value="Post Comment">Send</button>
                                 </span>
-                            </div>
+                            </form>
                         </div>
                     </div>
                     <!-- /.end of chat panel-heading -->
@@ -247,91 +239,10 @@
     <script src="../dist/js/members.js"></script>
     
     <script>
-        var uid = location.href.match(/uid=(.+)/)[1];
-        var db = firebase.database().ref('Users/' + uid);
-        var storage = firebase.storage();
-        
-        function getMemberPhotoUrl() {
-            var gsRef = storage.refFromURL('gs://t-extinguisher.appspot.com/no-avatar.png');
-            var checkPhoto = db.once("value").then(function(snapshot) {
-                return snapshot.child("Photo").exists();
-            });
-
-            if(checkPhoto == true) {
-                db.once("value").then(function(snapshot) {
-                    var url = snapshot.child("Photo").val();
-                    var img = document.getElementById('m-picture');
-                        img.src = url;
-                });
-            } else {
-                gsRef.getDownloadURL().then(function(url) {
-                var img = document.getElementById('m-picture');
-                    img.src = url;
-                }).catch(function(error) {
-                // Handle any errors
-                });
-            }
-        }
-        /*
-         ** Helper function to: dbResult
-         */
-        function retrieveFrom(path, callback, after) {
-            firebase.database().ref(path).once('value', function(snap) {
-                callback(snap.val());
-            }).then(function() {
-                after();
-            });
-        }
-
-        function dbResult(path, result, after) {
-            retrieveFrom(path, function(data) {
-                $.each(data, function (index, item) {
-                    result(index, item);
-                });
-            }, function() {
-                /*
-                * commented to avoid unchecked exception.
-                */
-                //after();
-            });
-        }
-        // Helper functions to: calculateScore
-        function common (avg, min, max) {
-            return (avg >= min) && (avg <= max);
-        }
-        // Get overall score of member
-        function calculateMemberScore() {
-            dbResult('/Ratings/', function(key,value) {
-                var pid = key;
-                var arr = [];
-                var A = 0.8;
-                var B = 0.9;
-                var z = 1 - Math.pow(Math.E,-1);
-                
-                getMemberProfileID().then(function(idValue){
-                    if(pid == idValue) {
-                        $.each(value, function(userAttr, val){
-                            arr.push(val);
-                        });
-
-                        const reducer = (accumulator, currentValue) => accumulator + currentValue;
-                        var sum = arr.reduce(reducer);
-                        var avg = sum / arr.length;
-
-                        if(common(avg, 4, 10)) {
-                            var scoreA = (A * avg + 10 * (1-A) * z).toFixed(2);
-                            $('p.m-overallScore').append(' ' + scoreA);
-                        } else if (common(avg, 0, 4)) {
-                            var scoreB = (A * avg + 10 * (1-B) * z).toFixed(2);
-                            $('p.m-overallScore').append(' ' + scoreB);
-                        } else {
-                            $('p.m-overallScore').append(' ' + sum);
-                        }
-                    }
-                }, function(){
-                    // if you need an additional callback function it should be here I believe
-                });
-            });
+        // Rate user
+        function rateUser(userScore) {
+            var num = userScore.inputbox.value;
+            alert("You selected " + num + " as your rating for this user");
         }
         // Append to member's profile
         getMemberName().then(function(value){
@@ -350,11 +261,36 @@
         getMemberPhotoUrl();
         // Append member's overall score
         calculateMemberScore();
-        // Submit a rating for user
-        function rateUser(userScore) {
-            var num = userScore.inputbox.value;
-            alert("You selected " + num + " as your rating for this user");
-        }
+        // Observer to onAuthStateChanged
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                var currentUserID = getUID();
+                // Save comment to database
+                function postComment(message) {
+                    getMemberProfileID().then(function(mpid){
+                        getName().then(function(userName){
+                            firebase.database().ref('Comments/' + mpid).child(uid + currentUserID).set({
+                                    'name': userName,
+                                    'message': message,
+                                    'postedAt': firebase.database.ServerValue.TIMESTAMP
+                                });
+                        });
+                    });
+                }
+                // Submit comment
+                $('#comment').submit(function(e) {
+                    e.preventDefault();
+                    var message = $('#comment').find('input[name="message"]').val();
+                    postComment(message), function() {
+                        $form.submit();
+                    }
+                });
+            } else {
+                // No user is signed in.
+            }
+        });
+        
+        getComments();
     </script>
 
 </body>

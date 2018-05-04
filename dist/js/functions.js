@@ -299,9 +299,7 @@ function calculateScore() {
 					$('p.p-overallScore').append(' ' + sum);
 				}
             }
-        }, function(){
-            // if you need an additional callback function it should be here I believe
-        });
+        }, function(){});
     });
 }
 

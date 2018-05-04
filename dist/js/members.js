@@ -117,3 +117,24 @@ function calculateMemberScore() {
         });
     });
 }
+// Get comments from database
+function getComments() {
+    getMemberProfileID().then(function(mpid) {
+        dbResult('/Comments/' + mpid, function(key,value) {
+            $('#comment-body div.panel-body').append('<div class="well well-sm">' + 
+                '<strong class="primary-font" id="postName' + key + '"></strong>' + 
+                '<small class="pull-right text-muted" id="postTime' + key + '"></small>' + 
+                '<p id="postMessage' + key + '"></p></div>');
+            
+            $.each(value, function(attr, val) {
+                if (attr === 'name') {
+                    $('#postName' + key).text(val);
+                } else if (attr === 'postedAt') {
+                    $('#postTime' + key).text(val);
+                } else if (attr === 'message') {
+                    $('#postMessage' + key).text(val);
+                }
+            });
+        });
+    });
+}
