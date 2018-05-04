@@ -165,16 +165,6 @@
     <!-- Custom Theme JavaScript -->
     <script src="../dist/js/sb-admin-2.js"></script>
 
-    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
-    <!--
-    <script>
-    $(document).ready(function() {
-        $('#allmembers-table').DataTable({
-            responsive: true
-        });
-    });
-    </script>
-    -->
     <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
     <script>
     // Initialize Firebase
@@ -192,11 +182,56 @@
     <script src="../dist/js/functions.js"></script>
 
     <script>
-    if (location.href.indexOf('uid=') !== -1) {
-        var uid = parseInt(location.href.split('uid=')[1].split('&')[0], 10);
-    } else {
         getAllUsers();
-    }
+        /*
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+                var memberListName = [];
+                var memberListEmail = [];
+                var memberListGender = [];
+                var memberList = [];
+                
+                function allMembers() {
+                    dbResult('Users/', function(key, value) {
+                        memberList.push(key);
+                    });
+                }
+
+                function getAllMemberUsers() {
+                    dbResult('/Users/', function(key, value) {
+                        $.each(value, function(userAttr, val) {
+                            if (userAttr === 'Name') {
+                                //memberListName.push(val);
+                            } else if (userAttr === 'Email') {
+                                //memberListEmail.push(val);
+                            } else if (userAttr === 'Gender') {
+                                //memberListGender.push(val);
+                            }
+                        });
+                    }, function() {
+                        // Callback to retrieving DB data
+                    });
+                }
+
+                allMembers();
+
+                //console.log(memberListName);
+                //console.log(memberListEmail);
+                //console.log(memberListGender);
+                console.log(memberList);
+
+                $('#allmembers-table').DataTable({
+                        data: memberList,
+                        columns: [
+                            {title: "Name"},
+                            {title: "Email"},
+                            {title: "Gender"}
+                        ]
+                    });
+            } else {
+                // No user is signed in.
+            }
+        });*/
     </script>
 </body>
 

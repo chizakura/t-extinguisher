@@ -130,7 +130,7 @@
                                 <i class="fa fa-flag fa-fw"></i> Rate Box
                             </div>
                         <div class="panel-body">
-                            <form id="rateUser">
+                            <div id="rateUser">
                                 <div class="form-group">
                                     <label class="radio-inline">
                                         <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline1" value="1">1
@@ -164,7 +164,7 @@
                                     </label>
                                 </div>
                                 <button type="submit" class="btn btn-default">Submit Button</button>
-                            </form>
+                            </div>
                         </div>
                         <div class="panel-footer">
                             <p>On a scale of 1 (worst) to 10 (best), please rate this person.</p>
@@ -276,13 +276,15 @@
                 // Save rating value to database
                 function rateUser(numVal) {
                     dbResult('Ratings/', function(key,value) {
+                        console.log(key);
+                        console.log(value);
                         getMemberProfileID().then(function(mpid) {
                             getProfileID().then(function(pid) {
                                 if(mpid == key) {
                                     $.each(value, function(userAttr,val) {
                                         if((pid == userAttr) == false) {
-                                            firebase.database().ref('Ratings/' + mpid).push({
-                                                pid: numVal
+                                            firebase.database().ref('Ratings/' + mpid).child(pid).push({
+                                                Score: numVal
                                             });
                                         }
                                     });
@@ -291,6 +293,15 @@
                         });
                     });
                 }
+
+                function checkChild (ch) {
+                    var ref = firebase.database().ref('Ratings');
+                    var boolVal = ref.once("value").then(function(snapshot) {
+                        return snapshot.hasChild(ch);
+                    });
+                    return boolVal;
+                }
+                
                 // Submit a comment
                 $('#comment').submit(function(e) {
                     e.preventDefault();

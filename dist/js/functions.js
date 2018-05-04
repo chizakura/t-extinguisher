@@ -262,7 +262,7 @@ function common (avg, min, max) {
     return (avg >= min) && (avg <= max);
 }
 
-function getOverallScore() {
+function getOverallScore() { // not used
     var uid = getUID();
     var ref = firebase.database().ref('Users/' + uid);
     var score = ref.once("value").then(function(snapshot) {
@@ -303,7 +303,7 @@ function calculateScore() {
     });
 }
 
-function getPhotoUrl() {
+function getPhotoUrl() { // Gets default image but not user specific image
 	var uid = getUID();
 	var db = firebase.database().ref('Users/' + uid);
 	var storage = firebase.storage();
