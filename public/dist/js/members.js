@@ -85,7 +85,11 @@ function calculateMemberScore() {
         getMemberProfileID().then(function(idValue){
             if(pid == idValue) {
                 $.each(value, function(userAttr, val){
-                    arr.push(val.rating);
+                    if(val.hasOwnProperty('rating')){
+                        arr.push(val.rating);
+                    } else {
+                        arr.push(val);
+                    }
                 });
 
                 if(arr.length > 0) {

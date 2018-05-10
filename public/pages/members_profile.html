@@ -162,9 +162,9 @@
                                     <label class="radio-inline">
                                         <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline10" value="10">10
                                     </label>
-                                </form>
+                                </div>
                                 <button type="submit" class="btn btn-default">Submit Button</button>
-                            </div>
+                            </form>
                         </div>
                         <div class="panel-footer">
                             <p>On a scale of 1 (worst) to 10 (best), please rate this person.</p>
@@ -307,7 +307,8 @@
                 $('#rateUser').submit(function(e) {
                     e.preventDefault();
                     var numVal = $('#rateUser').find('input[name=optionsRadiosInline]:checked').val();
-                    rateUser(numVal), function() {
+                    var numInt = parseInt(numVal,10);
+                    rateUser(numInt), function() {
                         $('#rateUser').submit();
                     }
                 });
