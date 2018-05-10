@@ -118,6 +118,7 @@ function getAllUsers() {
 ** Function purpose: Display list of all ratings for current user
 ** profile.html
 */
+
 function getUserRatings(){
     dbResult('/Ratings/', function(key,value) {
         var pid = key;
@@ -126,26 +127,33 @@ function getUserRatings(){
                 $.each(value, function(userAttr, val){
                     $('#userRatings-table tbody').append('<tr class ="' + userAttr +
                         '"><td class="userProfileID" id="userProfileID' + userAttr +
+												'"><td class="userRating" id = "userName' + userAttr +				// There was no table element for name anymore
                         '"><td class="userRating" id = "userRating' + userAttr +
                         '">');
-                    $('#userProfileID' + userAttr).text(userAttr);
-                    $('#userRating' + userAttr).text(val);
+                    $('#userProfileID' + userAttr).text(userAttr);										// userAttr represents the key of the records
+										$('#userName' + userAttr).text(val.name);													// With the new format of the record the name and rating
+                    $('#userRating' + userAttr).text(val.rating);											// can be called implicitely
                 });
-            } /*else if ($('#userRatings-table tbody tr.' + pid).length === 0) {
-                $('#userRatings-table tbody').append('<tr><td colspan="2">No data available in table</td></tr>');
-            }*/
+            } /*							*The closing curly brace wasn't commented out
+							 *							*Changed it to a block comment to make keeping
+							 *	       			*track of the start and end easier.
+							 * else if ($('#userRatings-table tbody tr.' + pid).length === 0) {
+               * $('#userRatings-table tbody').append('<tr><td colspan="2">No data available in table</td></tr>');
+						   * }
+							 */
         }, function(){
-            // if you need an additional callback function it should be here I believe
+        	// Additional callback function
         });
     });
 }
+
 /*
  ** Function purpose: Registration - register new user
  ** registration.html
  **
  ** Required input: name, email, password
  */
- 
+
  // Helper function to: createNewUser
 function writeUserData(email, name) {
 	let uid = getUID();
@@ -270,7 +278,7 @@ function getOverallScore() { // not used
     });
     return score;
 }
-
+// Get overall score of member
 function calculateScore() {
 	dbResult('/Ratings/', function(key,value) {
         var pid = key;
@@ -278,16 +286,19 @@ function calculateScore() {
         var A = 0.8;
         var B = 0.9;
         var z = 1 - Math.pow(Math.E,-1);
-        
+
         getProfileID().then(function(idValue){
 	        if(pid == idValue) {
                 $.each(value, function(userAttr, val){
-                    arr.push(val);
+						arr.push(val.rating);
                 });
-
-                const reducer = (accumulator, currentValue) => accumulator + currentValue;
-        		var sum = arr.reduce(reducer);
-        		var avg = sum / arr.length;
+				
+				if(arr.length > 0) {
+					// if the array receives no data then this would error
+	            	const reducer = (accumulator, currentValue) => accumulator + currentValue;
+	        		var sum = arr.reduce(reducer);
+	        		var avg = sum / arr.length;
+				}
 
                 if(common(avg, 4, 10)) {
                 	var scoreA = (A * avg + 10 * (1-A) * z).toFixed(2);

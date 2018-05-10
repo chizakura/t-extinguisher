@@ -2,9 +2,7 @@
 var uid = location.href.match(/uid=(.+)/)[1];
 var db = firebase.database().ref('Users/' + uid);
 var storage = firebase.storage();
-/*
- ** Helper function to: dbResult
- */
+// Helper function to dbResult()
 function retrieveFrom(path, callback, after) {
     firebase.database().ref(path).once('value', function(snap) {
         callback(snap.val());
@@ -87,13 +85,15 @@ function calculateMemberScore() {
         getMemberProfileID().then(function(idValue){
             if(pid == idValue) {
                 $.each(value, function(userAttr, val){
-                    arr.push(val);
+                    arr.push(val.rating);
                 });
 
-                const reducer = (accumulator, currentValue) => accumulator + currentValue;
-                var sum = arr.reduce(reducer);
-                var avg = sum / arr.length;
-
+                if(arr.length > 0) {
+                    const reducer = (accumulator, currentValue) => accumulator + currentValue;
+                    var sum = arr.reduce(reducer);
+                    var avg = sum / arr.length;
+                }
+                
                 if(common(avg, 4, 10)) {
                     var scoreA = (A * avg + 10 * (1-A) * z).toFixed(2);
                     $('p.m-overallScore').append(' ' + scoreA);
@@ -104,9 +104,7 @@ function calculateMemberScore() {
                     $('p.m-overallScore').append(' ' + sum);
                 }
             }
-        }, function(){
-            // if you need an additional callback function it should be here I believe
-        });
+        }, function(){});
     });
 }
 // Get comments from database

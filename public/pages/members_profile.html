@@ -130,7 +130,7 @@
                                 <i class="fa fa-flag fa-fw"></i> Rate Box
                             </div>
                         <div class="panel-body">
-                            <div id="rateUser">
+                            <form id="rateUser">
                                 <div class="form-group">
                                     <label class="radio-inline">
                                         <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline1" value="1">1
@@ -162,7 +162,7 @@
                                     <label class="radio-inline">
                                         <input type="radio" name="optionsRadiosInline" id="optionsRadiosInline10" value="10">10
                                     </label>
-                                </div>
+                                </form>
                                 <button type="submit" class="btn btn-default">Submit Button</button>
                             </div>
                         </div>
@@ -275,20 +275,13 @@
                 }
                 // Save rating value to database
                 function rateUser(numVal) {
-                    dbResult('Ratings/', function(key,value) {
-                        console.log(key);
-                        console.log(value);
-                        getMemberProfileID().then(function(mpid) {
-                            getProfileID().then(function(pid) {
-                                if(mpid == key) {
-                                    $.each(value, function(userAttr,val) {
-                                        if((pid == userAttr) == false) {
-                                            firebase.database().ref('Ratings/' + mpid).child(pid).push({
-                                                Score: numVal
-                                            });
-                                        }
-                                    });
-                                }
+                    getMemberProfileID().then(function(mpid){
+                        getProfileID().then(function(pid){
+                            getName().then(function(userName){
+                                firebase.database().ref('Ratings/' + mpid).child(pid).set({
+                                    'name': userName,
+                                    'rating': numVal
+                                });
                             });
                         });
                     });
