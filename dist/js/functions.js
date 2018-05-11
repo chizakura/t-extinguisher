@@ -304,7 +304,7 @@ function calculateScore() {
                 	var scoreA = (A * avg + 10 * (1-A) * z).toFixed(2);
                 	$('p.p-overallScore').append(' ' + scoreA);
                 } else if (common(avg, 0, 4)) {
-                	var scoreB = (A * avg + 10 * (1-B) * z).toFixed(2);
+                	var scoreB = (B * avg + 10 * (1-B) * z).toFixed(2);
 					$('p.p-overallScore').append(' ' + scoreB);
 				} else {
 					$('p.p-overallScore').append(' ' + sum);
