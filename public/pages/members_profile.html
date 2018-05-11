@@ -8,6 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
+    <!-- You can use open graph tags to customize link previews.
+    Learn more: https://developers.facebook.com/docs/sharing/webmasters -->
+    <meta property="og:url"           content="http://localhost:8080/public/pages/members_profile.html?uid=DPkr2jNzAUMrkhCYDa2briPNH8O2" />
+    <meta property="og:type"          content="website" />
+    <meta property="og:title"         content="ExTinguisher" />
+    <meta property="og:description"   content="ExTinguisher is an extension of Tinder with the purpose of allowing users to rate their past dates." />
+    <meta property="og:image"         content="../img/header/extinguisher_header.jpg" />
 
     <title id="member-title"></title>
 
@@ -33,6 +40,15 @@
 </head>
 
 <body>
+
+    <div id="fb-root"></div>
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0';
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
 
     <div id="wrapper">
 
@@ -186,14 +202,18 @@
                                 <i class="fa fa-comments fa-fw"></i> Comments
                             </div>
                         </div>
-                        <div class="panel-body"><!--
+                        <div class="panel-body">
                             <div class="well well-sm">
                                 <strong class="primary-font">Name test</strong>
                                     <small class="pull-right text-muted">
                                         <i class="fa fa-clock-o fa-fw"></i> 12 mins ago
                                     </small>
                                 <p>Comment test</p>
-                            </div>-->
+                            </br>
+                                    <div class="pull-right text-muted">
+                                        <div class="fb-like" data-href="http://localhost:8080/public/pages/members_profile.html?uid=DPkr2jNzAUMrkhCYDa2briPNH8O2" data-layout="button" data-action="like" data-size="small" data-show-faces="false" data-share="false"></div>
+                                    </div>
+                            </div>
                         </div>
                         <div class="panel-footer">
                             <form class="input-group" id="comment">
