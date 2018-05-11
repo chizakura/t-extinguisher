@@ -152,19 +152,18 @@ function getUserRatings(){
  */
 
  // Helper function to: createNewUser
-function writeUserData(email, name) {
+function writeUserData(email, name, gender) {
 	let uid = getUID();
 	let ref = firebase.database().ref('Users/');
 	ref.child(uid).set({
 		'Email': email,
-		'Gender': "undefined",
+		'Gender': gender,
 		'Name': name,
-		'Overall': 0,
-		'ProfileID': 0
+		'ProfileID': 0 //removed pid bc there is currently no function to check it
 	});
 }
 
-async function createNewUser(email, password, name) {
+async function createNewUser(email, password, name, gender) {
 	let ref = firebase.database().ref('Users/');
 	let val = await firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
 		// Handle errors here
@@ -172,7 +171,7 @@ async function createNewUser(email, password, name) {
 		var errorMessage = error.message;
 		alert(errorMessage);
 	});
-	writeUserData(email, name);
+	writeUserData(email, name, gender);
 }
 /*
  ** Function purpose: Login - authenticate existing user

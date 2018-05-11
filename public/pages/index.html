@@ -121,7 +121,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="jumbotron">
-                            <h1>Rate Past Dates</h1>
+                            <h1>Rate Past Dates</h1><img src="../img/bg_header.jpg" class="img-rounded" height="375" width="500">
                             <p>Let others know about your date and expose them to the world</p>
                             <p><a href="#" class="btn btn-primary btn-lg" role="button">Rate Now</a>
                             </p>
@@ -165,6 +165,13 @@
 	
     <script src="../dist/js/functions.js"></script>
 
+    <script>
+        $(‘.jumbotron’).css({‘height’: (($(window).height()))+’px’});
+ 
+        $(window).on(‘resize’, function(){
+         $(‘.jumbotron’).css({‘height’: (($(window).height()))+’px’});
+        });
+    </script>
 </body>
 
 </html>

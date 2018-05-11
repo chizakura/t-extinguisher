@@ -50,6 +50,17 @@
                                 <div class="form-group">
                                     <input class="form-control" id="lastname" placeholder="Last Name" name="lastname" type="text">
                                 </div>
+                                <div class="form-group" align="center">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="optionsRadiosInline" id="optionsRadiosInlineM" value="M">Male
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="optionsRadiosInline" id="optionsRadiosInlineF" value="F">Female
+                                    </label>
+                                </div><!--
+                                <div class="form-group">
+                                    <input class="form-control" id="profileid" placeholder="Profile ID" name="profileid" type="text">
+                                </div>-->
                                 <div class="form-group">
                                     <input class="form-control" id="email" placeholder="E-mail" name="email" type="email">
                                 </div>
@@ -119,7 +130,7 @@
 			var $form = $(this);
 			if ($form.find('input[name="password"]').val() === $form.find('input[name="confirmpassword"]').val() && $.trim($form.find('input[name="password"]').val()) !== '') {
 				if ($form.find('input[name="password"]').val().length >= minPassword) {
-                    createNewUser($form.find('input[name="email"]').val(), $form.find('input[name="password"]').val(), $form.find('input[name="firstname"]').val() + ' ' + $form.find('input[name="lastname"]').val(), function() {
+                    createNewUser($form.find('input[name="email"]').val(), $form.find('input[name="password"]').val(), $form.find('input[name="firstname"]').val() + ' ' + $form.find('input[name="lastname"]').val(), $form.find('input[name=optionsRadiosInline]:checked').val(), function() {
                         $form.attr('action', 'registration.html?registered');
 					    $form.submit();
                     })
