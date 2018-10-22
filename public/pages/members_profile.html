@@ -10,7 +10,7 @@
     <meta name="author" content="">
     <!-- You can use open graph tags to customize link previews.
     Learn more: https://developers.facebook.com/docs/sharing/webmasters -->
-    <meta property="og:url"           content="http://localhost:8080/public/pages/members_profile.html?uid=DPkr2jNzAUMrkhCYDa2briPNH8O2" />
+    <meta property="og:url"           content="https://t-extinguisher.firebaseapp.com/homepage/homepage.html" />
     <meta property="og:type"          content="website" />
     <meta property="og:title"         content="ExTinguisher" />
     <meta property="og:description"   content="ExTinguisher is an extension of Tinder with the purpose of allowing users to rate their past dates." />
@@ -42,13 +42,15 @@
 <body>
 
     <div id="fb-root"></div>
-    <script>(function(d, s, id) {
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) return;
-      js = d.createElement(s); js.id = id;
-      js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0';
-      fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));</script>
+    <script>
+    (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.6";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+    </script>
 
     <div id="wrapper">
 
@@ -98,7 +100,7 @@
                         </li>
                         <li>
                             <a href="members.html"><i class="fa fa-list-alt fa-fw"></i> Members List</a>
-                        </li>
+                        </li><!--
                         <li>
                             <a href="#"><i class="fa fa-fire-extinguisher fa-fw"></i> Dates<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
@@ -109,7 +111,7 @@
                                     <a href="#"> Add a Date</a>
                                 </li>
                             </ul>
-                        </li>
+                        </li>-->
                     </ul>
                 </div>
                 <!-- /.sidebar-collapse -->
@@ -202,18 +204,17 @@
                                 <i class="fa fa-comments fa-fw"></i> Comments
                             </div>
                         </div>
-                        <div class="panel-body">
+                        <div class="panel-body"><!--
                             <div class="well well-sm">
                                 <strong class="primary-font">Name test</strong>
                                     <small class="pull-right text-muted">
                                         <i class="fa fa-clock-o fa-fw"></i> 12 mins ago
                                     </small>
                                 <p>Comment test</p>
-                            </br>
-                                    <div class="pull-right text-muted">
-                                        <div class="fb-like" data-href="http://localhost:8080/public/pages/members_profile.html?uid=DPkr2jNzAUMrkhCYDa2briPNH8O2" data-layout="button" data-action="like" data-size="small" data-show-faces="false" data-share="false"></div>
-                                    </div>
-                            </div>
+                                <small class="pull-right">
+                                    <div class="fb-like" data-href="http://localhost:8080/public/pages/members_profile.html?uid=DPkr2jNzAUMrkhCYDa2briPNH8O2" data-layout="button" data-action="like" data-size="small" data-show-faces="false" data-share="false"></div>
+                                </small></br>
+                            </div>-->
                         </div>
                         <div class="panel-footer">
                             <form class="input-group" id="comment">
@@ -344,7 +345,10 @@
         });
         
         getComments();
+
     </script>
+
+    <div class="fb-quote"></div>
 
 </body>
 

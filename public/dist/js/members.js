@@ -2,6 +2,7 @@
 var uid = location.href.match(/uid=(.+)/)[1];
 var db = firebase.database().ref('Users/' + uid);
 var storage = firebase.storage();
+
 // Helper function to dbResult()
 function retrieveFrom(path, callback, after) {
     firebase.database().ref(path).once('value', function(snap) {
@@ -23,6 +24,7 @@ function dbResult(path, result, after) {
         //after();
     });
 }
+
 // Get member's name
 function getMemberName() {
     var name = db.once("value").then(function(snapshot) {
@@ -31,6 +33,7 @@ function getMemberName() {
     });
     return name;
 }
+
 // Get member's email
 function getMemberEmail() {
     var email = db.once("value").then(function(snapshot) {
@@ -39,6 +42,7 @@ function getMemberEmail() {
     });
     return email;
 }
+
 // Get member's profile id
 function getMemberProfileID() {
     var pid = db.once("value").then(function(snapshot) {
@@ -47,6 +51,7 @@ function getMemberProfileID() {
     });
     return pid;
 }
+
 // Get member's profile picture
 function getMemberPhotoUrl() {
     var gsRef = storage.refFromURL('gs://t-extinguisher.appspot.com/no-avatar.png');
@@ -69,10 +74,12 @@ function getMemberPhotoUrl() {
         });
     }
 }
+
 // Helper functions to: calculateScore
 function common (avg, min, max) {
     return (avg >= min) && (avg <= max);
 }
+
 // Get overall score of member
 function calculateMemberScore() {
     dbResult('/Ratings/', function(key,value) {
@@ -111,6 +118,7 @@ function calculateMemberScore() {
         }, function(){});
     });
 }
+
 // Get comments from database
 function getComments() {
     getMemberProfileID().then(function(mpid) {

@@ -64,6 +64,7 @@ function initialCheck() {
 		}
 	});
 }
+
 /*
  ** Helper function to: dbResult
  */
@@ -87,6 +88,7 @@ function dbResult(path, result, after) {
 		//after();
 	});
 }
+
 /*
 ** Function purpose: Display list of all users
 ** members.html
@@ -114,6 +116,7 @@ function getAllUsers() {
 		// Callback to retrieving DB data
 	});
 }
+
 /*
 ** Function purpose: Display list of all ratings for current user
 ** profile.html
@@ -133,17 +136,13 @@ function getUserRatings(){
 					$('#userName' + userAttr).text(val.name);
 					$('#userRating' + userAttr).text(val.rating);
                 });
-            } /***The closing curly brace wasn't commented out
-				**Changed it to a block comment to make keeping
-				**track of the start and end easier.
-				* else if ($('#userRatings-table tbody tr.' + pid).length === 0) {
-               	* $('#userRatings-table tbody').append('<tr><td colspan="2">No data available in table</td></tr>');
-				* }*/
-        }, function(){
+            }
+		}, function(){
         	// Additional callback function
         });
     });
 }
+
 /*
  ** Function purpose: Registration - register new user
  ** registration.html
@@ -159,7 +158,7 @@ function writeUserData(email, name, gender) {
 		'Email': email,
 		'Gender': gender,
 		'Name': name,
-		'ProfileID': 0 //removed pid bc there is currently no function to check it
+		'ProfileID': 0 // this value needs to be manually changed in the database
 	});
 }
 
@@ -173,6 +172,7 @@ async function createNewUser(email, password, name, gender) {
 	});
 	writeUserData(email, name, gender);
 }
+
 /*
  ** Function purpose: Login - authenticate existing user
  ** login.html
@@ -187,6 +187,7 @@ function signInExistingUser(email, password) {
 		alert(errorMessage);
 	});
 }
+
 /*
  ** Function purpose: Logout - sign out existing user
  **
@@ -201,6 +202,7 @@ function signOutUser() {
 		// An error happened.
 	});
 }
+
 /*
  ** Function purpose: Verification - send the user an email to verify their account
  **
@@ -214,6 +216,7 @@ function sendEmailVerification() {
 		// An error happened.
 	});
 }
+
 /*
  ** Function purpose: Reset password
  **
@@ -229,6 +232,7 @@ function sendPasswordReset(emailAddress) { // not used
 		// An error happened.
 	});
 }
+
 /*
  ** Function purpose: User data - access information about the existing user
  ** i.e. email, name, uid (user ID), profile ID, overall score, profile picture
@@ -266,14 +270,6 @@ function common (avg, min, max) {
     return (avg >= min) && (avg <= max);
 }
 
-function getOverallScore() { // not used
-    var uid = getUID();
-    var ref = firebase.database().ref('Users/' + uid);
-    var score = ref.once("value").then(function(snapshot) {
-        return snapshot.child("Overall").val();
-    });
-    return score;
-}
 // Get overall score of member
 function calculateScore() {
 	dbResult('/Ratings/', function(key,value) {
@@ -304,7 +300,7 @@ function calculateScore() {
                 	var scoreA = (A * avg + 10 * (1-A) * z).toFixed(2);
                 	$('p.p-overallScore').append(' ' + scoreA);
                 } else if (common(avg, 0, 4)) {
-                	var scoreB = (A * avg + 10 * (1-B) * z).toFixed(2);
+                	var scoreB = (B * avg + 10 * (1-B) * z).toFixed(2);
 					$('p.p-overallScore').append(' ' + scoreB);
 				} else {
 					$('p.p-overallScore').append(' ' + sum);
@@ -337,38 +333,4 @@ function getPhotoUrl() { // Gets default image but not user specific image
 		// Handle any errors
 		});
 	}
-}
-/*
- ** Function purpose: User data - update information about the existing user
- ** i.e. name, profile picture
- */
-function updatePhoto() { // under construction
-	// Get current user
-	var user = firebase.auth().currentUser;
-	// Create a storage ref w/ user
-	var storageRef = firebase.storage().ref(user + '/profilePicture/' + file.name);
-	// Upload file
-	var task = storageRef.put(file);
-	/*// The Firebase Way
-	user.updateProfile({
-		displayName: "",
-		photoURL: ""
-	}).then(function() {
-		// Update successful
-	}).catch(function(error) {
-		// An error happened
-	})*/
-}
-
-function updateName(newName) { // not used
-	var user = firebase.auth().currentUser;
-
-	user.updateProfile({
-		displayName: newName
-	}).then(function() {
-		// Update successful
-		window.location.reload();
-	}).catch(function() {
-		// An error happened.
-	});
 }
